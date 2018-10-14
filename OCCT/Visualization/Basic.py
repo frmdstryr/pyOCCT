@@ -36,6 +36,7 @@ from OCCT.OpenGl import OpenGl_GraphicDriver
 from OCCT.Quantity import *
 
 try:
+    from OCCT.SMDSAbs import SMDSAbs_Node
     from OCCT.SMESH import SMESH_MeshVSLink, SMESH_Mesh, SMESH_subMesh
 except ImportError:
     print('Warning: SMESH functions are not available')
@@ -310,24 +311,30 @@ class BasicViewer(wx.Frame):
 
         return self.display_shape(shape, rgb, transparency, material)
 
-    def display_mesh(self, mesh, mode=2):
+    def display_mesh(self, mesh, mode=2, group=None):
         """
         Display a mesh.
 
         :param mesh: The mesh.
         :type mesh: OCCT.SMESH_SMESH_Mesh or OCCT.SMESH_SMESH_subMesh
         :param int mode: Display mode for mesh elements (1=wireframe, 2=solid).
+        :param OCCT.SMESH.SMESH_Group group: The mesh group to display.
 
         :return: The MeshVS_Mesh created for the mesh.
         :rtype: OCCT.MeshVS.MeshVS_Mesh
         """
-        vs_link = SMESH_MeshVSLink(mesh)
+        if group is None:
+            vs_link = SMESH_MeshVSLink(mesh)
+        else:
+            vs_link = SMESH_MeshVSLink(mesh, group)
         mesh_vs = MeshVS_Mesh()
         mesh_vs.SetDataSource(vs_link)
         prs_builder = MeshVS_MeshPrsBuilder(mesh_vs)
         mesh_vs.AddBuilder(prs_builder)
         mesh_vs_drawer = mesh_vs.GetDrawer()
-        mesh_vs_drawer.SetBoolean(MeshVS_DA_DisplayNodes, False)
+        # Display nodes if group is a node group
+        if group is not None and group.GetGroupDS().GetType() != SMDSAbs_Node:
+            mesh_vs_drawer.SetBoolean(MeshVS_DA_DisplayNodes, False)
         mesh_vs_drawer.SetColor(MeshVS_DA_EdgeColor, self._black)
         mesh_vs.SetDisplayMode(mode)
         self._my_context.Display(mesh_vs, True)
