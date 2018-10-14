@@ -20,7 +20,7 @@ requirements:
     - pybind11
     - occt ==7.2.0
     - vtk ==8.1.0
-    - smesh ==8.3.0b0
+    - smesh ==8.3.0.3
     - netgen ==6.2.1804
 
   run:
@@ -29,7 +29,7 @@ requirements:
     - vc 14 # [win]
     - occt ==7.2.0
     - vtk ==8.1.0
-    - smesh ==8.3.0b0
+    - smesh ==8.3.0.3
     - netgen ==6.2.1804
 
 test:
