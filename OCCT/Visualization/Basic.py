@@ -333,8 +333,9 @@ class BasicViewer(wx.Frame):
         mesh_vs.AddBuilder(prs_builder)
         mesh_vs_drawer = mesh_vs.GetDrawer()
         # Display nodes if group is a node group
-        if group is not None and group.GetGroupDS().GetType() != SMDSAbs_Node:
-            mesh_vs_drawer.SetBoolean(MeshVS_DA_DisplayNodes, False)
+        mesh_vs_drawer.SetBoolean(MeshVS_DA_DisplayNodes, False)
+        if group is not None and group.GetGroupDS().GetType() == SMDSAbs_Node:
+            mesh_vs_drawer.SetBoolean(MeshVS_DA_DisplayNodes, True)
         mesh_vs_drawer.SetColor(MeshVS_DA_EdgeColor, self._black)
         mesh_vs.SetDisplayMode(mode)
         self._my_context.Display(mesh_vs, True)
