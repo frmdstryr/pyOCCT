@@ -53,7 +53,7 @@ py::module::import("OCCT.TCollection");
 py::module::import("OCCT.Storage");
 
 // CLASS: STDOBJMGT_PERSISTENT
-py::class_<StdObjMgt_Persistent, opencascade::handle<StdObjMgt_Persistent>, Standard_Transient> cls_StdObjMgt_Persistent(mod, "StdObjMgt_Persistent", "Root class for a temporary persistent object that reads data from a file and then creates transient object using the data.");
+py::class_<StdObjMgt_Persistent, Standard_Transient> cls_StdObjMgt_Persistent(mod, "StdObjMgt_Persistent", "Root class for a temporary persistent object that reads data from a file and then creates transient object using the data.");
 
 // Methods
 cls_StdObjMgt_Persistent.def("Read", (void (StdObjMgt_Persistent::*)(StdObjMgt_ReadData &)) &StdObjMgt_Persistent::Read, "Read persistent data from a file.", py::arg("theReadData"));
