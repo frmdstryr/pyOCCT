@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
+
 rm -Rf build
 mkdir build
 cd build
 
+
+python binder/run.py -o ../
+
 # export CC=gcc-4.9
 # export CXX=g++-4.9
+
 
 cmake .. -G "Ninja" \
     -DCMAKE_BUILD_TYPE="Release" \

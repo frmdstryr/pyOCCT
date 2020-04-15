@@ -1,6 +1,8 @@
 mkdir build
 cd build
 
+python binder/generate/run.py -o ../
+
 cmake .. -G "Ninja" ^
     -DCMAKE_BUILD_TYPE="Release" ^
     -DENABLE_SMESH=OFF ^

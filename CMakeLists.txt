@@ -17,7 +17,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 cmake_minimum_required(VERSION 3.10)
-project(pyOCCT VERSION 7.3.0.0 LANGUAGES CXX)
+project(pyOCCT VERSION 7.4.0.0 LANGUAGES CXX)
 
 
 # --------------------------------------------------------------------------- #
@@ -32,16 +32,16 @@ option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
 # SETTINGS
 # --------------------------------------------------------------------------- #
 set(pyOCCT_MAJOR_VERSION 7)
-set(pyOCCT_MINOR_VERSION 3)
+set(pyOCCT_MINOR_VERSION 4)
 set(pyOCCT_PATCH_VERSION 0)
 set(pyOCCT_TWEAK_VERSION 0)
 
 # --------------------------------------------------------------------------- #
 # MANUAL BUILD
 # --------------------------------------------------------------------------- #
-# set(TBB_INCLUDE_DIR "$ENV{HOME}/miniconda3/include/tbb")
-# set(OpenCASCADE_INCLUDE_DIR "$ENV{HOME}/miniconda3/include/opencascade")
-# set(OpenCASCADE_LIBRARY_DIR "$ENV{HOME}/miniconda3/lib")
+set(TBB_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/tbb")
+set(OpenCASCADE_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/opencascade")
+set(OpenCASCADE_LIBRARY_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/lib")
 
 
 if(WIN32)
@@ -92,7 +92,7 @@ include_directories(${TBB_INCLUDE_DIR})
 # include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/OCCT_Mods.cmake)
 if(NOT DEFINED OpenCASCADE_INCLUDE_DIR OR NOT DEFINED OpenCASCADE_LIBRARY_DIR)
     message(STATUS "Searching for OpenCASCADE...")
-    find_package(OpenCASCADE 7.3.0 REQUIRED)
+    find_package(OpenCASCADE 7.4.0 REQUIRED)
 endif()
 
 if(NOT EXISTS ${OpenCASCADE_INCLUDE_DIR})
