@@ -6,10 +6,9 @@ image:
 
 environment:
   matrix:
-    - CONDA_INSTALL_LOCN: C:\Miniconda38-x64
-      TARGET_ARCH: x64
-      ARCH: 64
-      PY_VER: 3.8
+    - PYTHON: C:\Python37-x64
+      PYTHON_VERSION: "3.7"
+      PYTHON_ARCH: 64
 
 platform:
   - x64
@@ -18,9 +17,10 @@ install:
   - cmd: rmdir C:\cygwin /s /q
   - cmd: rmdir C:\QT /s /q
   - cmd: rmdir C:\MSYS64 /s /q
-  - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
+  - cmd: powershell .\\ci\\conda\\installconda.ps1
+  - cmd: "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - cmd: conda.exe update --yes --quiet conda
-  - cmd: conda.exe install python=%PY_VER% conda-build conda-verify --yes
+  - cmd: conda.exe install python=%PYTHON_VERSION% conda-build conda-verify --yes
   - cmd: conda.exe config --set show_channel_urls true
   - cmd: conda.exe config --add channels conda-forge
 
@@ -35,7 +35,7 @@ install:
   - sh: export PATH="$HOME/miniconda/bin:$HOME/miniconda/lib:$PATH"
   - sh: conda config --set always_yes yes --set changeps1 no
   - sh: conda update -q conda
-  - sh: conda install python=$PY_VER conda-build conda-verify
+  - sh: conda install python=$PYTHON_VERSION conda-build conda-verify
   - sh: conda config --add channels conda-forge
 
 build: off
@@ -43,7 +43,7 @@ build: off
 test_script:
   - cmd: conda.exe build ci\conda
   - cmd: mkdir dist
-  - cmd: copy %CONDA_INSTALL_LOCN%\conda-bld\win-%ARCH%\pyocct*.bz2 dist
+  - cmd: copy %PYTHON%\conda-bld\win-%PYTHON_ARCH%\pyocct*.bz2 dist
 
   - sh: conda build ci/conda
   - sh: mkdir dist
