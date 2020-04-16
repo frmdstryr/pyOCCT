@@ -39,7 +39,6 @@ set(pyOCCT_TWEAK_VERSION 0)
 # --------------------------------------------------------------------------- #
 # MANUAL BUILD
 # --------------------------------------------------------------------------- #
-#set(PY_VER 3.6)
 #set(TBB_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/tbb")
 #set(OpenCASCADE_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/opencascade")
 #set(OpenCASCADE_LIBRARY_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/lib")
@@ -216,7 +215,6 @@ endif(ENABLE_SMESH)
 # --------------------------------------------------------------------------- #
 # PYBIND11
 # --------------------------------------------------------------------------- #
-set(PYBIND11_PYTHON_VERSION ${PY_VER})
 IF(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/pybind11")
     message(STATUS "Adding pybind11 subdirectory.")
     add_subdirectory(pybind11)

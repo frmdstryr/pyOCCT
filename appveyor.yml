@@ -9,6 +9,7 @@ environment:
     - CONDA_INSTALL_LOCN: C:\Miniconda38-x64
       TARGET_ARCH: x64
       ARCH: 64
+      PY_VER: 3.6
 
 platform:
   - x64
@@ -19,7 +20,7 @@ install:
   - cmd: rmdir C:\MSYS64 /s /q
   - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
   - cmd: conda.exe update --yes --quiet conda
-  - cmd: conda.exe install conda-build --yes
+  - cmd: conda.exe install python=%PY_VER% conda-build conda-verify --yes
   - cmd: conda.exe config --set show_channel_urls true
   - cmd: conda.exe config --add channels conda-forge
 
@@ -34,8 +35,7 @@ install:
   - sh: export PATH="$HOME/miniconda/bin:$HOME/miniconda/lib:$PATH"
   - sh: conda config --set always_yes yes --set changeps1 no
   - sh: conda update -q conda
-  - sh: conda install conda-build
-  - sh: conda install anaconda-client
+  - sh: conda install python=$PY_VER conda-build conda-verify
   - sh: conda config --add channels conda-forge
 
 
