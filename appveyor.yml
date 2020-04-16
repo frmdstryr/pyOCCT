@@ -6,9 +6,9 @@ image:
 
 environment:
   matrix:
-    - PYTHON: C:\Python37-x64
-      PYTHON_VERSION: "3.7"
-      PYTHON_ARCH: 64
+    # https://www.appveyor.com/docs/windows-images-software/#python
+    - MINICONDA: C:\Miniconda37-x64
+      PYTHON_VERSION: 3.7
 
 platform:
   - x64
@@ -17,10 +17,9 @@ install:
   - cmd: rmdir C:\cygwin /s /q
   - cmd: rmdir C:\QT /s /q
   - cmd: rmdir C:\MSYS64 /s /q
-  - cmd: powershell .\\ci\\conda\\installconda.ps1
-  - cmd: "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - cmd: call %MINICONDA%\Scripts\activate.bat
   - cmd: conda.exe update --yes --quiet conda
-  - cmd: conda.exe install python=%PYTHON_VERSION% conda-build conda-verify --yes
+  - cmd: conda.exe install conda-build conda-verify --yes
   - cmd: conda.exe config --set show_channel_urls true
   - cmd: conda.exe config --add channels conda-forge
 
@@ -43,7 +42,7 @@ build: off
 test_script:
   - cmd: conda.exe build ci\conda
   - cmd: mkdir dist
-  - cmd: copy %PYTHON%\conda-bld\win-%PYTHON_ARCH%\pyocct*.bz2 dist
+  - cmd: copy %MINICONDA%\conda-bld\win-64\pyocct*.bz2 dist
 
   - sh: conda build ci/conda
   - sh: mkdir dist
