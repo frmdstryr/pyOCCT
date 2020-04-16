@@ -18,10 +18,9 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 import os
-import re
 from collections import OrderedDict
 from ctypes import c_uint
-from textwrap import dedent
+import re
 
 from binder import cymbal
 from binder.clang.cindex import (AccessSpecifier, Index, TranslationUnit,
@@ -87,7 +86,6 @@ class MacroForHandle(object):
 class Generator(object):
     """
     Main class for OCCT header parsing and binding generation.
-
     :ivar str name: Name of the main package.
     """
 
@@ -109,9 +107,6 @@ class Generator(object):
     skipped = set()
     immutable = set()
 
-    # Add a default constructor
-    default_constructors = set()
-
     excluded_bases = dict()
     import_guards = dict()
     plus_headers = dict()
@@ -121,7 +116,6 @@ class Generator(object):
     call_guards = dict()
     manual = dict()
     extra = dict()
-
 
     _mods = OrderedDict()
 
@@ -146,9 +140,9 @@ class Generator(object):
 
         # Build available include files
         occt_incs = os.listdir(occt_include_dir)
-
         Generator.available_incs = frozenset(occt_incs)
         Generator.available_mods = frozenset(available_mods)
+
         # Turn on/off binding of certain declarations for debugging
         self.bind_enums = True
         self.bind_functions = True
@@ -183,9 +177,7 @@ class Generator(object):
     def process_config(self, fn):
         """
         Process a configuration file.
-
         :param str fn: The file.
-
         :return: None.
         """
         logger.write('Processing configuration file: {}.\n'.format(fn))
@@ -386,7 +378,6 @@ class Generator(object):
                     self.skipped.add(line)
                     continue
 
-
                 # Manual text
                 if line.startswith('+manual'):
                     line = line.replace('+manual', '')
@@ -420,16 +411,10 @@ class Generator(object):
                     self.immutable.add(line)
                     continue
 
-                if line.startswith('+constructor'):
-                    line = line.replace('+constructor', '').strip()
-                    self.default_constructors.add(line)
-
     def generate_common_header(self, path):
         """
         Generate common header file for the pyOCCT project.
-
         :param str path: Path to write header file.
-
         :return:
         """
         logger.write('Generating common header...\n')
@@ -444,23 +429,18 @@ class Generator(object):
 
         fout.write(SRC_PREFIX)
 
-        txt = dedent(
-            """
-            #ifndef __pyOCCT_Common_Header__
-            #define __pyOCCT_Common_Header__
+        txt = """
+#ifndef __pyOCCT_Common_Header__
+#define __pyOCCT_Common_Header__
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
+#include <Standard_Handle.hxx>
+namespace py = pybind11;
+// Use opencascade::handle as holder type for Standard_Transient types
+PYBIND11_DECLARE_HOLDER_TYPE(T, opencascade::handle<T>, true);
+"""
 
-            #include <pybind11/pybind11.h>
-            #include <pybind11/stl.h>
-            #include <pybind11/stl_bind.h>
-
-            #include <Standard_Handle.hxx>
-
-            namespace py = pybind11;
-
-            // Use opencascade::handle as holder type for Standard_Transient types
-            PYBIND11_DECLARE_HOLDER_TYPE(T, opencascade::handle<T>, true);
-            """
-        )
         fout.write(txt)
         fout.write('#endif\n')
         fout.close()
@@ -470,10 +450,8 @@ class Generator(object):
     def parse(self, file_, *args):
         """
         Parse the main include file.
-
         :param str file_: The main include file to parse.
         :param str args: Extra arguments to pass to the compiler.
-
         :return: None
         """
         logger.write('Parsing headers...\n')
@@ -496,7 +474,6 @@ class Generator(object):
     def dump_diagnostics(self):
         """
         Dump diagnostic information.
-
         :return: None.
         """
         print('----------------------')
@@ -507,18 +484,13 @@ class Generator(object):
             print('SEVERITY: {}'.format(diag.severity))
             print('LOCATION: {}'.format(diag.location))
             print('MESSAGE: {}'.format(diag.spelling))
-            for i, child in enumerate(diag.children):
-                tag = 'TRACE:' if i == 0 else ' '*6
-                print('{} {}'.format(tag, child.format()))
             print('---')
         print('----------------------')
 
     def save(self, fname):
         """
         Save the TranslationUnit to a file.
-
         :param str fname: The filename.
-
         :return: None.
         """
         self.tu.save(fname)
@@ -526,9 +498,7 @@ class Generator(object):
     def load(self, fname):
         """
         Load a TranslationUnit from a saved AST file.
-
         :param str fname: The filename.
-
         :return: None.
         """
         self._tu = TranslationUnit.from_ast_file(fname, self._indx)
@@ -536,15 +506,13 @@ class Generator(object):
     def traverse(self):
         """
         Traverse parsed headers and gather binders.
-
         :return: None.
         """
-
         available_macros = {}
         # First gather all the handle macros to handle them specially
         for binder in self.tu_binder.get_children_of_kind(
                 CursorKind.MACRO_INSTANTIATION):
-            if binder.spelling in MacroForHandle.relevant_macros:
+            if binder.spelling.upper() in MacroForHandle.relevant_macros:
                 tokens = list(binder.cursor.get_tokens())
                 macro = tokens[0].spelling
                 txt = ''.join([t.spelling for t in tokens])
@@ -646,6 +614,12 @@ class Generator(object):
                 types_log.append(msg)
                 spelling = binder.type.get_canonical().spelling
                 canonical_types[spelling] = binder
+                # Check for macro
+                if qname in available_macros:
+                    binder.macro = available_macros[qname]
+                    msg = '\tFound macro: {}-->{}\n'.format(qname,
+                                                            binder.macro.name)
+                    types_log.append(msg)
             elif binder.is_typedef:
                 mod.types.append(binder)
                 msg = '\tFound typedef: {}\n'.format(qname)
@@ -661,13 +635,6 @@ class Generator(object):
                     alias_log.append(msg)
                 else:
                     canonical_types[spelling] = binder
-
-                    # Check for macro
-                    if qname in available_macros:
-                        binder.macro = available_macros[qname]
-                        msg = '\tFound macro: {}-->{}\n'.format(
-                            qname, binder.macro.name)
-                        types_log.append(msg)
             elif binder.is_class_template:
                 mod.templates.append(binder)
                 msg = '\tFound class template: {}\n'.format(qname)
@@ -711,7 +678,6 @@ class Generator(object):
     def build_includes(self):
         """
         Build include files for the modules.
-
         :return: None.
         """
         logger.write('Building includes...\n')
@@ -722,7 +688,6 @@ class Generator(object):
     def build_imports(self):
         """
         Build module imports.
-
         :return: None.
         """
         # Import module based on prefix of header files
@@ -758,7 +723,6 @@ class Generator(object):
         """
         Sort class binders so they are ordered based on their base
         classes.
-
         :return: None.
         """
         logger.write('Sorting binders...\n')
@@ -769,9 +733,7 @@ class Generator(object):
     def bind(self, path):
         """
         Bind the library.
-
         :param str path: Path to write sub-folders.
-
         :return:
         """
         logger.write('Binding types...\n')
@@ -782,9 +744,7 @@ class Generator(object):
     def bind_templates(self, path):
         """
         Bind the library.
-
         :param str path: Path to write sub-folders.
-
         :return:
         """
         logger.write('Binding templates...\n')
@@ -795,9 +755,7 @@ class Generator(object):
     def is_module(self, name):
         """
         Check if the name is an available module.
-
         :param str name: The name.
-
         :return: *True* if an available module, *False* otherwise.
         :rtype: bool
         """
@@ -806,7 +764,6 @@ class Generator(object):
     def check_circular(self):
         """
         Check for circular imports.
-
         :return: None.
         """
         logger.write('Finding circular imports...\n')
@@ -823,9 +780,7 @@ class Generator(object):
     def get_module(cls, name):
         """
         Get a module by name or return a new one.
-
         :param str name: Module name.
-
         :return: The existing module or new one.
         :rtype: binder.core.Module
         """
@@ -843,9 +798,7 @@ class Generator(object):
 class Module(object):
     """
     Module class containing binders.
-
     :param str name: Module name.
-
     :ivar str name: Module name.
     :ivar list(str) includes: List of relevant include files for this module.
     :ivar list(binder.core.CursorBinder) enums: List of binders around
@@ -883,7 +836,6 @@ class Module(object):
         """
         Sort class binders so they are ordered based on their base
         classes.
-
         :return: None.
         """
         # Sort enums based on their file location. Sometimes multiple enums are
@@ -959,7 +911,6 @@ class Module(object):
     def build_includes(self):
         """
         Build list of include files for the module.
-
         :return: None.
         """
         self.includes = ['pyOCCT_Common.hxx']
@@ -994,9 +945,7 @@ class Module(object):
     def is_dependent(self, other):
         """
         Check to see if the this module is dependent on the other module based on their imports.
-
         :param binder.core.Module other: The other module.
-
         :return: *True* if dependent, *False* otherwise.
         :rtype: bool
         """
@@ -1018,9 +967,7 @@ class Module(object):
     def is_circular(self, other):
         """
         Check if this module and the other try to import each other.
-
         :param binder.core.Module other: The other module.
-
         :return: *True* if circular, *False* otherwise.
         :rtype: bool
         """
@@ -1029,9 +976,7 @@ class Module(object):
     def bind_templates(self, path):
         """
         Bind templates.
-
         :param str path: Path to write templates.
-
         :return:
         """
         # Create module folder
@@ -1046,9 +991,7 @@ class Module(object):
     def bind(self, path):
         """
         Bind the module.
-
         :param str path: Path to write sub-directory.
-
         :return: None.
         """
         # Create module folder and main source file
@@ -1123,9 +1066,7 @@ class Module(object):
 class CursorBinder(object):
     """
     Binder for cursors.
-
     :param clang.cindex.Cursor cursor: The underlying cursor.
-
     :ivar clang.cindex.Cursor cursor: The underlying cursor.
     :ivar binder.core.CursorBinder alias: The alias of this binder if
         applicable.
@@ -1464,7 +1405,6 @@ class CursorBinder(object):
     def is_nested(self):
         """
         Check if binder is nested in a class, struct, or class template.
-
         :return: *True* if nested, *False* otherwise.
         :rtype: bool
         """
@@ -1806,7 +1746,6 @@ class CursorBinder(object):
         If the binder is a reference to a declaration or a declaration of
         some entity, return a binder that points to the definition of that
         entity.
-
         :return: The definition.
         :rtype: binder.core.CursorBinder
         """
@@ -1816,7 +1755,6 @@ class CursorBinder(object):
         """
         If the binder is a specialization of a template, attempt to get the
         cursor of the template.
-
         :return: The definition.
         :rtype: binder.core.CursorBinder
         """
@@ -1825,7 +1763,6 @@ class CursorBinder(object):
     def get_children(self):
         """
         Get children of binder.
-
         :return: The children.
         :rtype: list(binder.core.CursorBinder)
         """
@@ -1837,10 +1774,8 @@ class CursorBinder(object):
     def get_children_of_kind(self, kind, only_public=False):
         """
         Get children of a specified kind.
-
         :param clang.cindex.CursorKind kind: The cursor kind.
         :param bool only_public: Return only cursor that are public.
-
         :return: List of children.
         :rtype: list(binder.core.CursorBinder)
         """
@@ -1856,7 +1791,6 @@ class CursorBinder(object):
     def dfs(self):
         """
         Depth-first walk of all descendants.
-
         :return: List of descendants.
         :rtype: Generator(binder.core.CursorBinder)
         """
@@ -1867,7 +1801,6 @@ class CursorBinder(object):
     def build_includes(self):
         """
         Get a list of relevant files to include for the binder.
-
         :return: List of include files.
         :rtype: list(str)
         """
@@ -1937,7 +1870,6 @@ class CursorBinder(object):
     def bind(self, path):
         """
         Bind the type.
-
         :return: None.
         """
         logger.write('\tBinding {}.\n'.format(self.qualified_spelling))
@@ -1957,7 +1889,6 @@ class CursorBinder(object):
     def generate(self):
         """
         Generate the source text for the binder.
-
         :return: The source text.
         :rtype: list(str)
         """
@@ -1984,9 +1915,7 @@ class CursorBinder(object):
 class TypeBinder(object):
     """
     Binder for types.
-
     :param clang.cindex.Type type_: The type.
-
     :ivar clang.cindex.Type type: The underlying type.
     """
 
@@ -2053,7 +1982,6 @@ class TypeBinder(object):
     def get_declaration(self):
         """
         Get the declaration of the type.
-
         :return: The declaration.
         :rtype: binder.core.CursorBinder
         """
@@ -2062,7 +1990,6 @@ class TypeBinder(object):
     def get_canonical(self):
         """
         Get the canonical type.
-
         :return: The canonical type.
         :rtype: binder.core.TypeBinder
         """
@@ -2071,7 +1998,6 @@ class TypeBinder(object):
     def get_pointee(self):
         """
         For pointer types, returns the type of the pointee.
-
         :return: The pointee.
         :rtype: binder.core.TypeBinder
         """
@@ -2081,9 +2007,7 @@ class TypeBinder(object):
 def bind_enum(binder):
     """
     Bind an enum.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: None.
     """
     src = ['// ENUM: {}\n'.format(binder.python_name.upper())]
@@ -2105,19 +2029,13 @@ def bind_enum(binder):
     src.append('\n')
 
     binder.src = src
-
-    # Add extra header for special macro case
-    if binder.macro is None:
-        return []
-    return binder.macro.headers()
+    return []
 
 
 def bind_function(binder):
     """
     Bind a function.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: None.
     """
     src = ['// FUNCTION: {}\n'.format(binder.python_name.upper())]
@@ -2136,9 +2054,7 @@ def bind_function(binder):
 def bind_class(binder):
     """
     Bind a class.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: None.
     """
     src = ['// CLASS: {}\n'.format(binder.python_name.upper())]
@@ -2148,15 +2064,17 @@ def bind_class(binder):
     src.append('\n')
 
     binder.src = src
-    return []
+
+    # Add extra header for special macro case
+    if binder.macro is None:
+        return []
+    return binder.macro.headers()
 
 
 def bind_typedef(binder):
     """
     Bind a typedef.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: None.
     """
     src = ['// TYPEDEF: {}\n'.format(binder.python_name.upper())]
@@ -2192,10 +2110,8 @@ def bind_typedef(binder):
 def bind_class_template(binder, path):
     """
     Bind a class template.
-
     :param binder.core.CursorBinder binder: The binder.
     :param str path: The path to write the source file.
-
     :return: None.
     """
 
@@ -2250,9 +2166,7 @@ def bind_class_template(binder, path):
 def generate_enum(binder):
     """
     Generate source for enumeration.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: List of binder source lines.
     :rtype: list(str)
     """
@@ -2317,9 +2231,7 @@ def generate_enum(binder):
 def generate_function(binder):
     """
     Generate source for function.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2363,9 +2275,7 @@ def generate_function(binder):
 def generate_class(binder):
     """
     Generate source for class.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2484,11 +2394,6 @@ def generate_class(binder):
             if item.is_public:
                 item.parent_name = cls
                 src_ctor += generate_ctor(item)
-
-        #Missing default constructor
-        #if qname in Generator.default_constructors:
-            #src_ctor.append('{}.def(py::init<>());\n'.format(cls))
-
     # Check for default constructor
     if not src_ctor and binder.needs_default_ctor:
         src_ctor = ['{}.def(py::init<>());\n'.format(cls)]
@@ -2573,9 +2478,7 @@ def generate_class(binder):
 def generate_ctor(binder):
     """
     Generate source for class constructor.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2608,9 +2511,7 @@ def generate_ctor(binder):
 def generate_field(binder):
     """
     Generate source for class member fields.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2638,9 +2539,7 @@ def generate_field(binder):
 def generate_method(binder):
     """
     Generate source for class member function.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2769,9 +2668,7 @@ def generate_method(binder):
 def generate_typedef2(binder):
     """
     Generate source for a typedef.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines and extra headers if needed.
     :rtype: tuple(list(str), list(str))
     """
@@ -2820,9 +2717,7 @@ def generate_typedef2(binder):
 def generate_class_template(binder):
     """
     Generate source for a class template.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Binder source as a list of lines.
     :rtype: list(str)
     """
@@ -2843,9 +2738,7 @@ def generate_class_template(binder):
 def function_signature(binder):
     """
     Generate data for the function signature.
-
     :param binder.core.CursorBinder binder: The binder.
-
     :return: Number of arguments, number of default values, list of names,
         list of types, their default values, and if their type is array-like.
     :rtype: tuple(int, int, list(str), list(str), list(str), list(bool))
@@ -2872,10 +2765,8 @@ def function_signature(binder):
 def generate_immutable_inout_method(binder, qname):
     """
     Generate binding for a function that modifies immutable types in place.
-
     :param binder.core.CursorBinder binder: The binder.
     :param str qname: The function fully qualified name.
-
     :return: The binding text.
     :rtype: str
     """
