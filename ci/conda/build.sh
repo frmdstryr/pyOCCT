@@ -10,6 +10,7 @@ cmake .. -G "Ninja" \
     -DENABLE_SMESH=OFF \
     -DENABLE_NETGEN=OFF \
     -DENABLE_FORCE=OFF \
+    -DPYTHON_VERSION=$PYTHON_VERSION \
     -DTBB_INCLUDE_DIR=$PREFIX/include
 
 ninja install -j2
