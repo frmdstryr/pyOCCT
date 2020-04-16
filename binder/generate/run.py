@@ -92,14 +92,14 @@ def main():
 
     # TODO: Move this to the binder?
     print('Collecting OpenCASCADE headers...')
-    gen_dir = os.path.join(BINDER_ROOT, 'generate')
+    gen_dir = os.path.abspath(os.path.join(BINDER_ROOT, 'generate'))
     occt_mods = gen_includes(args.opencascade_include_path, gen_dir)
 
     # Force using conda's clangdev includes
     # TODO: This may not be needed on other systems but was getting errors
     # on linux.
-    clang_include_path = os.path.join(
-        CONDA_PREFIX, 'lib', 'clang', args.libclang_version, 'include')
+    clang_include_path = os.path.abspath(os.path.join(
+        CONDA_PREFIX, 'lib', 'clang', args.libclang_version, 'include'))
 
     if not os.path.exists(clang_include_path):
         print(f"ERROR: libclang include path is does not exist {clang_include_path}")
@@ -108,14 +108,17 @@ def main():
     main = Generator(occt_mods, args.opencascade_include_path,
                      clang_include_path)
 
-    pyocct_inc = os.path.join(args.pyocct_path, 'inc')
-    pyocct_src = os.path.join(args.pyocct_path, 'src')
+    pyocct_inc = os.path.abspath(os.path.join(args.pyocct_path, 'inc'))
+    pyocct_src = os.path.abspath(os.path.join(args.pyocct_path, 'src'))
 
     if not os.path.exists(pyocct_inc):
         os.makedirs(pyocct_inc)
 
     if not os.path.exists(pyocct_src):
         os.makedirs(pyocct_src)
+
+    print(f"Writing inc files to: {pyocct_inc}")
+    print(f"Writing src files to: {pyocct_src}")
 
     # For debugging and dev
     main.bind_enums = True
