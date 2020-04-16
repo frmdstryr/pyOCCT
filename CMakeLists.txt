@@ -39,9 +39,9 @@ set(pyOCCT_TWEAK_VERSION 0)
 # --------------------------------------------------------------------------- #
 # MANUAL BUILD
 # --------------------------------------------------------------------------- #
-set(TBB_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/tbb")
-set(OpenCASCADE_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/opencascade")
-set(OpenCASCADE_LIBRARY_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/lib")
+#set(TBB_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/tbb")
+#set(OpenCASCADE_INCLUDE_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/include/opencascade")
+#set(OpenCASCADE_LIBRARY_DIR "$ENV{HOME}/miniconda3/envs/pyOCCT/lib")
 
 
 if(WIN32)
@@ -237,7 +237,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${OUTPUT_PATH}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
 
 # Treat each .cxx file in src/modules as a module
-file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/modules/*.cxx)
+file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx)
 
 # OCCT modules
 foreach(SRC ${SRCS})
@@ -255,7 +255,7 @@ foreach(SRC ${SRCS})
     pybind11_add_module(${MOD} ${SRC})
     target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES})
     set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
-    target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/templates)
+    target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
     install(FILES ${OUTPUT_PATH}/${MOD}${EXTENSION}
             DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/OCCT)
 endforeach()
