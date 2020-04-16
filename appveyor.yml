@@ -9,7 +9,7 @@ environment:
     - CONDA_INSTALL_LOCN: C:\Miniconda38-x64
       TARGET_ARCH: x64
       ARCH: 64
-      PY_VER: 3.6
+      PY_VER: 3.8
 
 platform:
   - x64
