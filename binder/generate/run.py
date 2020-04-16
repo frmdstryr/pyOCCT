@@ -58,6 +58,9 @@ def gen_includes(opencascade_include_path='../include/opencascade',
 
 def main():
     parser = argparse.ArgumentParser()
+    print('='*100)
+    print("pyOCCT Binder")
+    print('='*100)
 
     parser.add_argument(
         '-i',
@@ -80,11 +83,11 @@ def main():
     args = parser.parse_args()
 
     if not os.path.exists(args.opencascade_include_path):
-        print("OpenCASCADE include path does not exist")
+        print("ERROR: OpenCASCADE include path does not exist")
         sys.exit(1)
 
     if not os.path.exists(args.pyocct_path):
-        print("pyOCCT path is does not exist")
+        print("ERROR: pyOCCT path is does not exist")
         sys.exit(1)
 
     # TODO: Move this to the binder?
@@ -99,7 +102,7 @@ def main():
         CONDA_PREFIX, 'lib', 'clang', args.libclang_version, 'include')
 
     if not os.path.exists(clang_include_path):
-        print(f"libclang include path is does not exist {clang_include_path}")
+        print(f"ERROR: libclang include path is does not exist {clang_include_path}")
         sys.exit(1)
 
     main = Generator(occt_mods, args.opencascade_include_path,
@@ -150,6 +153,8 @@ def main():
 
     print('Binding...')
     main.bind(pyocct_src)
+    print('Done!')
+    print('='*100)
 
 
 if __name__ == '__main__':
