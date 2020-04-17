@@ -654,6 +654,7 @@
 +header XmlMXCAFDoc: TopTools_LocationSet.hxx
 
 +header XmlObjMgt: LDOM_MemManager.hxx
++header Xw: xTypes.h
 
 # Python names ----------------------------------------------------------------
 +pname AIS_PointCloud::DisplayMode-->enumDisplayMode

@@ -11,8 +11,10 @@ if BINDER_ROOT not in sys.path:
 from binder.core import Generator
 
 # Use conda instead of system lib/includes
-CONDA_PREFIX = os.environ.get('CONDA_PREFIX', '..')
-
+if sys.platform == 'win32':
+    CONDA_PREFIX = os.environ.get('CONDA_PREFIX', '..')
+else:
+    CONDA_PREFIX = os.path.join(os.environ.get('BUILD_PREFIX', '..'), 'Library')
 
 def gen_includes(opencascade_include_path='../include/opencascade',
                  output_dir='.'):
