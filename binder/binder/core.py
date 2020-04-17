@@ -2380,12 +2380,10 @@ def generate_class(binder):
         local = ', py::module_local()'
 
     # Source
-    src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(qname, holder,
-                                                                 bases, cls,
-                                                                 parent,
-                                                                 name_, docs,
-                                                                 multi_base,
-                                                                 local)]
+    tname = 'typename ' + qname if '::' in qname else qname
+    src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(
+        tname, holder, bases, cls, parent, name_, docs, multi_base,
+        local)]
 
     # Constructors
     src_ctor = []
@@ -2714,6 +2712,26 @@ def generate_typedef2(binder):
     return [], [], []
 
 
+def patch_typenames(binder, src):
+    """
+    Hack to correct spelling of some types that miss the template parameters
+    and "typename" qualifier like "NCollection_List::iterator" should be
+    "typename NCollection_List<TheItemType>::iterator".
+    :param binder.core.CursorBinder binder: The binder.
+    :param str src: The class souce code
+    :return: Binder source as a list of lines.
+    :rtype: list(str)
+    """
+    src_out = []
+    qname = binder.qualified_name
+    spelling = binder.qualified_spelling
+
+    for line in src:
+        line = line.replace(spelling + '::', 'typename ' + qname + '::')
+        src_out.append(line)
+    return src_out
+
+
 def generate_class_template(binder):
     """
     Generate source for a class template.
@@ -2722,16 +2740,7 @@ def generate_class_template(binder):
     :rtype: list(str)
     """
     src = generate_class(binder)
-
-    # Hack to correct spelling of some types that miss the template parameters
-    # and "typename" qualifier like "NCollection_List::iterator" should be
-    # "typename NCollection_List<TheItemType>::iterator".
-    src_out = []
-    qname = binder.qualified_name
-    spelling = binder.qualified_spelling
-    for line in src:
-        line = line.replace(spelling + '::', 'typename ' + qname + '::')
-        src_out.append(line)
+    src_out = patch_typenames(binder, src)
     return src_out
 
 

@@ -16,6 +16,9 @@ before_install:
   - sudo apt -q update
   - sudo apt -y install libxi-dev libgl1-mesa-dev
 
+  # This causes pybind to find the wrong python
+  - sudo rm -Rf /opt/pyenv/
+
   # Install minconda
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh

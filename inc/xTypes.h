@@ -24,12 +24,7 @@ The OCCT include files for Linux use these two X Windows related structs. Since 
 #define __xTypes_h__
 
 struct _xcolor {
-    unsigned long  pixel;
-    unsigned short red;
-    unsigned short green;
-    unsigned short blue;
-    char           flags;
-    char           pad;
+
 };
 
 struct __GLXFBConfigRec {
