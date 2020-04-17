@@ -14,6 +14,7 @@ requirements:
   build:
     - python
     - vc 17 # [win]
+    - vtk
     - cmake
     - ninja
     - pybind11==2.5.0
