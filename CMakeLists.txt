@@ -90,7 +90,7 @@ include_directories(${TBB_INCLUDE_DIR})
 # --------------------------------------------------------------------------- #
 # XCB (for GLX headers)
 # --------------------------------------------------------------------------- #
-if(NOT MSVC)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     if(NOT DEFINED XCB_INCLUDE_DIR)
         message(FATAL_ERROR "XCB_INCLUDE_DIR is required.")
     endif()
