@@ -21,9 +21,7 @@ requirements:
     - clang==10.0.0
     - occt==7.4.0
     - tbb-devel
-
     - vtk
-    - mesa-libgl-cos6-x86_64 # [linux]
 
   run:
     - python
