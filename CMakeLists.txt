@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 project(pyOCCT VERSION 7.4.0.0 LANGUAGES CXX)
 
 
@@ -87,11 +87,11 @@ message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
 include_directories(${TBB_INCLUDE_DIR})
 
 # --------------------------------------------------------------------------- #
-# OpenGL
+# GLX
 # --------------------------------------------------------------------------- #
 if(NOT WIN32)
-    message(STATUS "Searching for OpenGL...")
-    find_package(OpenGL REQUIRED)
+    message(STATUS "Searching for GLX...")
+    find_package(GLX REQUIRED)
 endif()
 
 # --------------------------------------------------------------------------- #
