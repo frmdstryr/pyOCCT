@@ -8,12 +8,12 @@ source:
 build:
   number: 0
   features:
-    - vc14 # [win]
+    - vc17 # [win]
 
 requirements:
   build:
     - python
-    - vc 14 # [win]
+    - vc 17 # [win]
     - cmake
     - ninja
     - pybind11==2.5.0
@@ -21,12 +21,13 @@ requirements:
     - clang==10.0.0
     - occt==7.4.0
     - tbb-devel
+    - libxcb # [linux]
 
   run:
     - python
     # - wxpython
     # - pyqt >=5
-    - vc 14 # [win]
+    - vc 17 # [win]
     - occt==7.4.0
 
 test:
