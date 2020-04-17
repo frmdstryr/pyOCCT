@@ -12,8 +12,7 @@ from binder.core import Generator
 
 # Use conda instead of system lib/includes
 if sys.platform == 'win32':
-    CONDA_PREFIX = os.path.join(
-        os.environ.get('CONDA_DEFAULT_ENV', '..'), 'Library')
+    CONDA_PREFIX = os.environ.get('LIBRARY_PREFIX', '..')
 else:
     CONDA_PREFIX = os.environ.get('CONDA_PREFIX', '..')
 

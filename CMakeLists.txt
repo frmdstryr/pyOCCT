@@ -41,7 +41,6 @@ set(pyOCCT_TWEAK_VERSION 0)
 # --------------------------------------------------------------------------- #
 #set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
 #set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
-#set(XCB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/xcb")
 #set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
 #set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
 
@@ -87,20 +86,6 @@ endif()
 message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
 include_directories(${TBB_INCLUDE_DIR})
 
-# --------------------------------------------------------------------------- #
-# XCB (for GLX headers)
-# --------------------------------------------------------------------------- #
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    if(NOT DEFINED XCB_INCLUDE_DIR)
-        message(FATAL_ERROR "XCB_INCLUDE_DIR is required.")
-    endif()
-
-    if (NOT EXISTS ${XCB_INCLUDE_DIR})
-        message(FATAL_ERROR "XCB include directory does not exist.")
-    endif()
-    message(STATUS "XCB include directory: ${XCB_INCLUDE_DIR}")
-    include_directories(${XCB_INCLUDE_DIR})
-endif()
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE

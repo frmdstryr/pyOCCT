@@ -14,9 +14,9 @@ platform:
   - x64
 
 install:
-  - cmd: rmdir C:\cygwin /s /q
-  - cmd: rmdir C:\QT /s /q
-  - cmd: rmdir C:\MSYS64 /s /q
+  #- cmd: rmdir C:\cygwin /s /q
+  #- cmd: rmdir C:\QT /s /q
+  #- cmd: rmdir C:\MSYS64 /s /q
   - cmd: call %MINICONDA%\Scripts\activate.bat
   - cmd: conda.exe update --yes --quiet conda
   - cmd: conda.exe install conda-build conda-verify --yes

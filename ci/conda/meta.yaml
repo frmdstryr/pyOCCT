@@ -22,9 +22,8 @@ requirements:
     - occt==7.4.0
     - tbb-devel
 
-    # These are in the standard build
     - vtk
-    - libxcb # [linux]
+    - glfw
 
   run:
     - python
