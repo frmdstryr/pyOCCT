@@ -86,6 +86,13 @@ endif()
 message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
 include_directories(${TBB_INCLUDE_DIR})
 
+# --------------------------------------------------------------------------- #
+# OpenGL
+# --------------------------------------------------------------------------- #
+if(NOT WIN32)
+    message(STATUS "Searching for OpenGL...")
+    find_package(OpenGL REQUIRED)
+endif()
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE

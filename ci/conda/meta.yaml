@@ -16,14 +16,13 @@ requirements:
     - vc 14 # [win]
     - cmake
     - ninja
-    - pybind11==2.5.0
+    - pybind11
     - libclang==10.0.0
-    - clang==10.0.0
     - occt==7.4.0
     - tbb-devel
 
     - vtk
-    - glfw
+    - mesa-libgl-cos6-x86_64 # [linux]
 
   run:
     - python
