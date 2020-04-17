@@ -14,7 +14,6 @@ requirements:
   build:
     - python
     - vc 17 # [win]
-    - vtk
     - cmake
     - ninja
     - pybind11==2.5.0
@@ -22,6 +21,9 @@ requirements:
     - clang==10.0.0
     - occt==7.4.0
     - tbb-devel
+
+    # These are in the standard build
+    - vtk
     - libxcb # [linux]
 
   run:
