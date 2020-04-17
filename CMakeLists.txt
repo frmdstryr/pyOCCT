@@ -84,12 +84,13 @@ endif()
 if (NOT EXISTS ${TBB_INCLUDE_DIR})
     message(FATAL_ERROR "TBB include directory does not exist.")
 endif()
+message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
 include_directories(${TBB_INCLUDE_DIR})
 
 # --------------------------------------------------------------------------- #
 # XCB (for GLX headers)
 # --------------------------------------------------------------------------- #
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+if(NOT MSVC)
     if(NOT DEFINED XCB_INCLUDE_DIR)
         message(FATAL_ERROR "XCB_INCLUDE_DIR is required.")
     endif()
@@ -97,6 +98,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     if (NOT EXISTS ${XCB_INCLUDE_DIR})
         message(FATAL_ERROR "XCB include directory does not exist.")
     endif()
+    message(STATUS "XCB include directory: ${XCB_INCLUDE_DIR}")
     include_directories(${XCB_INCLUDE_DIR})
 endif()
 
