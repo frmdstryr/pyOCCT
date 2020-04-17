@@ -5,9 +5,9 @@ dist: bionic
 language: cpp
 matrix:
   include:
-    - env: PYTHON_VERSION="3.6"
-      os: linux
-      dist: bionic
+    #- env: PYTHON_VERSION="3.6"
+    #  os: linux
+    #  dist: bionic
     - env: PYTHON_VERSION="3.7"
       os: linux
       dist: bionic
