@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 project(pyOCCT VERSION 7.4.0.0 LANGUAGES CXX)
 
 
@@ -39,10 +39,10 @@ set(pyOCCT_TWEAK_VERSION 0)
 # --------------------------------------------------------------------------- #
 # MANUAL BUILD
 # --------------------------------------------------------------------------- #
-#set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
-#set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
-#set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
-#set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
+set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
+set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
+set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
+set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
 
 
 if(WIN32)
@@ -87,11 +87,11 @@ message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
 include_directories(${TBB_INCLUDE_DIR})
 
 # --------------------------------------------------------------------------- #
-# GLX
+# OpenGL
 # --------------------------------------------------------------------------- #
 if(NOT WIN32)
-    message(STATUS "Searching for GLX...")
-    find_package(GLX REQUIRED)
+    message(STATUS "Searching for OpenGL GLX...")
+    find_package(OpenGL REQUIRED GLX)
 endif()
 
 # --------------------------------------------------------------------------- #
