@@ -414,6 +414,8 @@
 -function MAT2d_CutCurve::Perform(const opencascade::handle<Geom2d_Curve> &, const MAT_Side)
 -function MAT2d_CutCurve::PerformInf
 
+-function MeshVS_DataSource3D::MeshVS_DataSource3D
+
 -function MoniTool_AttrList::GetStringAttribute
 -function MoniTool_CaseData::Text
 -function MoniTool_TypedValue::Internals
@@ -438,6 +440,7 @@
 -function OpenGl_ShaderManager::PushMaterialState
 -function OpenGl_TriangleSet::OpenGl_TriangleSet
 -function OpenGl_TriangleSet::QuadBVH
+-function OpenGl_TriangleSet::Box
 -function OpenGl_Workspace::BufferDump
 -function OpenGl_Workspace::ResetAppliedAspect
 -function OpenGl_Group::GlStruct
