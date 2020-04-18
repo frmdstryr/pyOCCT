@@ -184,6 +184,10 @@
 -function BRepGProp_VinertGK::GetAbsolutError
 
 -function BRepMesh_ConeRangeSplitter::GetSplitSteps
+
+-function BRepMesh_ConstrainedBaseMeshAlgo
+-function BRepMesh_ConstrainedBaseMeshAlgo::getCellsCount
+
 -function BRepMesh_DataStructureOfDelaun::ElementNodes
 -function BRepMesh_Delaun::Frontier
 -function BRepMesh_Delaun::InternalEdges
@@ -657,6 +661,7 @@
 +header XmlMXCAFDoc: TopTools_LocationSet.hxx
 
 +header XmlObjMgt: LDOM_MemManager.hxx
++header Xw: xTypes.h
 
 # Python names ----------------------------------------------------------------
 +pname AIS_PointCloud::DisplayMode-->enumDisplayMode
