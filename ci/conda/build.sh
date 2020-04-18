@@ -5,6 +5,8 @@ rm -Rf build
 mkdir build
 cd build
 
+find $CONDA_PREFIX | grep glx.h
+
 cmake .. -G "Ninja" \
     -DCMAKE_BUILD_TYPE="Release" \
     -DENABLE_SMESH=OFF \

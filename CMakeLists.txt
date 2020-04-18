@@ -78,6 +78,8 @@ endif()
 # --------------------------------------------------------------------------- #
 message(STATUS "Searching for TBB...")
 find_package(TBB REQUIRED)
+message(STATUS "TBB include dir: ${TBB_INCLUDE_DIR}")
+include_directories(${TBB_INCLUDE_DIR})
 
 # --------------------------------------------------------------------------- #
 # OpenGL
@@ -87,10 +89,14 @@ if(NOT WIN32)
         message(STATUS "Searching for OpenGL...")
         find_package(OpenGL REQUIRED GLX EGL)
     endif()
+    if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
+        message(FATAL_ERROR "Failed to find OpenGL library directory.")
+    endif()
     message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
     #message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
     include_directories(${OPENGL_EGL_INCLUDE_DIRS})
     #link_directories(${OPENGL_egl_LIBRARY})
+
 endif()
 
 
