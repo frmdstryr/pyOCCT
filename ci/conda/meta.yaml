@@ -23,8 +23,6 @@ requirements:
     - tbb-devel
     - vtk
 
-    - xorg-libxi # [linux]
-    - xorg-libxcb # [linux]
     - mesa-libgl-devel-cos6-x86_64 # [linux]
     - mesa-libegl-devel-cos6-x86_64 # [linux]
 

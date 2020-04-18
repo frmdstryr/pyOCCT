@@ -862,3 +862,5 @@
 
 # Patches -----------------------------------------------------------------
 +patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
+
++patch TDataXtd: (const int, const opencascade::handle<TNaming_NamedShape> &-->(const TDataXtd_ConstraintEnum, const opencascade::handle<TNaming_NamedShape> &

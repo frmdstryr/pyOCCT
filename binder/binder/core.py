@@ -1012,6 +1012,8 @@ class Module(object):
         if not os.path.isdir(path):
             os.makedirs(path)
         fname = '/'.join([path, self.name + '.cxx'])
+
+
         fout = open(fname, 'w')
 
         # File header
@@ -1068,8 +1070,17 @@ class Module(object):
             fout.write('};\n\n')
 
         # Main bind loop
+        src = []
         for binder in binders:
-            fout.writelines(binder.src)
+            src.extend(binder.src)
+
+        # Patch the file
+        # TODO: Line Number is off
+        patch_src(self.name , src)
+
+        # Write it out
+        for line in src:
+            fout.write(line)
         fout.write('\n')
 
         # End module
