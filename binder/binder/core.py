@@ -116,6 +116,7 @@ class Generator(object):
     call_guards = dict()
     manual = dict()
     extra = dict()
+    patches = dict()
 
     _mods = OrderedDict()
 
@@ -409,6 +410,19 @@ class Generator(object):
                     line = line.replace('+immutable', '')
                     line = line.strip()
                     self.immutable.add(line)
+                    continue
+
+                 # Replace text in file
+                if line.startswith('+patch'):
+                    line = line.replace('+patch', '')
+                    line = line.strip()
+                    qname, txt = line.split(':', 1)
+                    qname = qname.strip()
+                    pair = txt.strip().split('-->', 1)
+                    if qname in self.patches:
+                        self.patches[qname].append(pair)
+                    else:
+                        self.patches[qname] = [pair]
                     continue
 
     def generate_common_header(self, path):
@@ -2156,6 +2170,9 @@ def bind_class_template(binder, path):
     # End include guard
     src.append('#endif')
 
+    # Patch the file
+    patch_src(bind_name, src)
+
     # Write file
     fname = ''.join([path, '/', bind_name, '.hxx'])
     fout = open(fname, 'w')
@@ -2848,3 +2865,29 @@ def generate_immutable_inout_method(binder, qname):
     # Binding text
     bind_txt = '[]' + interface_txt + func_txt + return_txt
     return bind_txt
+
+
+def patch_src(filename, src):
+    """
+    Patches the source in place. If no patches are set for the filename this is
+    a no-op.
+    :param str filename: The file to patch excluding the extension
+    :param list src: The source lines of the file before they're written
+    """
+    if filename not in Generator.patches:
+        return
+
+    line_start = len(SRC_PREFIX.split("\n"))
+
+    for find, replace in Generator.patches[filename]:
+        for i, line in enumerate(src[:]):
+            if find in line:
+                new_line = line.replace(find, replace)
+                msg = "Patched {} line {}:\n{}\n{}".format(
+                    filename, i + line_start, line, new_line)
+                logger.write(msg)
+                print(msg)
+
+                # Update the src line
+                src[i] = new_line
+

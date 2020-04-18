@@ -851,3 +851,6 @@
 +extra TopoDS_Shape-->cls_TopoDS_Shape.def("__hash__", [](TopoDS_Shape &self) {return self.HashCode(999999); });
 
 +extra XCAFDoc_ShapeTool-->cls_XCAFDoc_ShapeTool.def("FindSubShape", [](XCAFDoc_ShapeTool &self, const TDF_Label &shapeL, const TopoDS_Shape &sub) { TDF_Label L; Standard_Boolean status = self.FindSubShape(shapeL, sub, L); return std::tuple<Standard_Boolean, TDF_Label>(status, L); }, "Finds a label for subshape of shape stored on label shapeL Returns Null label if it is not found", py::arg("shapeL"), py::arg("sub"));
+
+# Patches -----------------------------------------------------------------
++patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
