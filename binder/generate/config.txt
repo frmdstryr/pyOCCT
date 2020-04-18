@@ -455,6 +455,9 @@
 -function ShapeAnalysis_FreeBounds::ConnectEdgesToWires_
 -function ShapeAnalysis_FreeBounds::ConnectWiresToWires_
 
+# Abstract ctor
+-function ShapeCustom_Modification
+
 -function ShapeFix_WireSegment::ShapeFix_WireSegment(const TopoDS_Wire &, const TopAbs_Orientation)
 
 -function StdPersistent_DataXtd_Constraint::Import

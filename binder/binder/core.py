@@ -2409,9 +2409,11 @@ def generate_class(binder):
             if item.is_public:
                 item.parent_name = cls
                 src_ctor += generate_ctor(item)
-    # Check for default constructor
-    if not src_ctor and binder.needs_default_ctor:
-        src_ctor = ['{}.def(py::init<>());\n'.format(cls)]
+
+        # Check for default constructor
+        if not src_ctor and binder.needs_default_ctor \
+                and qname not in Generator.excluded_functions:
+            src_ctor = ['{}.def(py::init<>());\n'.format(cls)]
 
     if src_ctor:
         src_ctor.insert(0, '\n// Constructors\n')
