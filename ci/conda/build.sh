@@ -10,6 +10,7 @@ cmake .. -G "Ninja" \
     -DENABLE_SMESH=OFF \
     -DENABLE_NETGEN=OFF \
     -DENABLE_FORCE=OFF \
+    -DOPENGL_EGL_INCLUDE_DIRS=$CONDA_PREFIX/x86_64-conda_cos6-linux-gnu/sysroot/usr/include \
     -DTBB_INCLUDE_DIR=$CONDA_PREFIX/include
 
 ninja install -j2

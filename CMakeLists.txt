@@ -82,13 +82,15 @@ find_package(TBB REQUIRED)
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(NOT WIN32 AND NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
-    message(STATUS "Searching for OpenGL...")
-    find_package(OpenGL REQUIRED GLX EGL)
+if(NOT WIN32)
+    if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
+        message(STATUS "Searching for OpenGL...")
+        find_package(OpenGL REQUIRED GLX EGL)
+    endif()
     message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
-    message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
+    #message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
     include_directories(${OPENGL_EGL_INCLUDE_DIRS})
-    link_directories(${OPENGL_egl_LIBRARY})
+    #link_directories(${OPENGL_egl_LIBRARY})
 endif()
 
 
