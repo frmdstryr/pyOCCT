@@ -25,7 +25,7 @@ install:
 
 
   - sh: sudo apt-get -q update
-  - sh: sudo apt-get -y install libxi-dev libgl1-mesa-dev
+  - sh: sudo apt-get -y install libxi-dev libgl1-mesa-dev libglfw3-dev libgles2-mesa-dev
 
   - sh: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - sh: chmod +x miniconda.sh

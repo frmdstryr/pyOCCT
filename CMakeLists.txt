@@ -76,35 +76,31 @@ endif()
 # --------------------------------------------------------------------------- #
 # TBB (for BVH header)
 # --------------------------------------------------------------------------- #
-if(NOT DEFINED TBB_INCLUDE_DIR)
-    message(FATAL_ERROR "TBB_INCLUDE_DIR is required.")
-endif()
-
-if (NOT EXISTS ${TBB_INCLUDE_DIR})
-    message(FATAL_ERROR "TBB include directory does not exist.")
-endif()
-message(STATUS "TBB include directory: ${TBB_INCLUDE_DIR}")
-include_directories(${TBB_INCLUDE_DIR})
+message(STATUS "Searching for TBB...")
+find_package(TBB REQUIRED)
 
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(NOT WIN32 AND NOT DEFINED OPENGL_INCLUDE_DIR)
+if(NOT WIN32 AND NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
     message(STATUS "Searching for OpenGL...")
-    find_package(OpenGL REQUIRED GLX)
+    find_package(OpenGL REQUIRED GLX EGL)
+    message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
+    message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
+    include_directories(${OPENGL_EGL_INCLUDE_DIRS})
+    link_directories(${OPENGL_egl_LIBRARY})
+endif()
 
-    if(NOT EXISTS ${OPENGL_INCLUDE_DIR})
-        message(FATAL_ERROR "Failed to find OpenGL include directory.")
-    endif()
 
-    if(NOT EXISTS ${OPENGL_LIBRARIES})
-        message(FATAL_ERROR "Failed to find OpenGL lib directory.")
-    endif()
+# ----------------------------------------------------------------------- #
+# VTK
+# ----------------------------------------------------------------------- #
+if (MSVC)
+    message(STATUS "Searching for VTK...")
+    find_package(VTK REQUIRED)
 
-    message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
-    message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
-    include_directories(${OPENGL_INCLUDE_DIR})
-    link_directories(${OPENGL_LIBRARIES})
+    message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
+    include_directories(${VTK_INCLUDE_DIRS})
 endif()
 
 # --------------------------------------------------------------------------- #

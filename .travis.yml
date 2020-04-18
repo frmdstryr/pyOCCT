@@ -17,7 +17,7 @@ matrix:
 
 before_install:
   - sudo apt -q update
-  - sudo apt -y install libxi-dev libgl1-mesa-dev
+  - sudo apt -y install libxi-dev libgl1-mesa-dev libglfw3-dev libgles2-mesa-dev
 
   # This causes pybind to find the wrong python
   - sudo rm -Rf /opt/pyenv/
