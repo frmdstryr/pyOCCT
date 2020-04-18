@@ -104,6 +104,7 @@ class Generator(object):
     excluded_headers = set()
     nodelete = set()
     nested_classes = set()
+    downcast_classes = set()
     skipped = set()
     immutable = set()
 
@@ -372,6 +373,12 @@ class Generator(object):
                     self.nested_classes.add(line)
                     continue
 
+                if line.startswith('+downcast'):
+                    line = line.replace('+downcast', '')
+                    line = line.strip()
+                    self.downcast_classes.add(line)
+                    continue
+
                 # Skipped binders
                 if line.startswith('+skip'):
                     line = line.replace('+skip', '')
@@ -453,6 +460,19 @@ class Generator(object):
 namespace py = pybind11;
 // Use opencascade::handle as holder type for Standard_Transient types
 PYBIND11_DECLARE_HOLDER_TYPE(T, opencascade::handle<T>, true);
+
+// Allow downcasting subclasses of Standard_Transient*
+namespace pybind11 {
+
+    template<typename itype>
+    struct py:polymorphic_type_hook<itype, detail::enable_if_t<std::is_base_of<Standard_Transient, itype>::value>> {
+         static const void *get(const itype *src, const std::type_info*& type) {
+             return static_cast<Standard_Transient*>(src);
+         }
+    };
+
+}
+
 """
 
         fout.write(txt)
@@ -2409,9 +2429,16 @@ def generate_class(binder):
 
     # Source
     tname = 'typename ' + qname if '::' in qname else qname
-    src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(
-        tname, holder, bases, cls, parent, name_, docs, multi_base,
-        local)]
+    if qname in Generator.downcast_classes:
+        # TODO: parent?
+        src = [
+            'auto {} = static_cast<py::class_<{}{}{}>(mod.attr("{}"));\n'.format(
+                cls, tname, holder, bases, name)
+        ]
+    else:
+        src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(
+            tname, holder, bases, cls, parent, name_, docs, multi_base,
+            local)]
 
     # Constructors
     src_ctor = []

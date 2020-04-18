@@ -669,6 +669,7 @@
 
 # nodelete option -------------------------------------------------------------
 +nodelete TDF_LabelNode
++nodelete Poly_CoherentTriPtr
 
 # Excluded base classes -------------------------------------------------------
 -base BRepExtrema_OverlapTool: BVH_PairTraverse<Standard_Real, 3>
@@ -778,6 +779,9 @@
 +nested NCollection_BaseList::Iterator
 +nested NCollection_BaseMap::Iterator
 +nested NCollection_UBTree<TheObjType, TheBndType>::Selector
+
+# Classes that need downcasted  -----------------------------------------------
+#+downcast BRepMesh_CurveTessellator
 
 # Skipped types ---------------------------------------------------------------
 +skip AIS_LocalStatus

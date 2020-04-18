@@ -29,4 +29,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 namespace py = pybind11;
 // Use opencascade::handle as holder type for Standard_Transient types
 PYBIND11_DECLARE_HOLDER_TYPE(T, opencascade::handle<T>, true);
+
+// Allow downcasting subclasses of Standard_Transient*
+namespace pybind11 {
+
+    template<typename itype>
+    struct py:polymorphic_type_hook<itype, detail::enable_if_t<std::is_base_of<Standard_Transient, itype>::value>> {
+         static const void *get(const itype *src, const std::type_info*& type) {
+             return static_cast<Standard_Transient*>(src);
+         }
+    };
+
+}
 #endif
