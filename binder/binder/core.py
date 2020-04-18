@@ -2460,7 +2460,14 @@ def generate_class(binder):
     for item in binder.methods:
         if item.is_public:
             item.parent_name = cls
-            src_methods += generate_method(item)
+            method_src = generate_method(item)
+
+            # Comment out virtual methods
+            if item.is_pure_virtual_method:
+                for i, line in enumerate(method_src):
+                    method_src[i] = '// virtual // ' + line
+
+            src_methods += method_src
     if src_methods:
         src_methods.insert(0, '\n// Methods\n')
         src += src_methods
