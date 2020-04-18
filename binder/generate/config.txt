@@ -863,4 +863,6 @@
 # Patches -----------------------------------------------------------------
 +patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
 
+# TDataXtd_ConstraintEnum seems to be missing
 +patch TDataXtd: (const int, const opencascade::handle<TNaming_NamedShape> &-->(const TDataXtd_ConstraintEnum, const opencascade::handle<TNaming_NamedShape> &
++patch TDataXtd: (const int, Standard_OStream &)-->(const TDataXtd_ConstraintEnum, Standard_OStream &)
