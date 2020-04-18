@@ -39,10 +39,10 @@ set(pyOCCT_TWEAK_VERSION 0)
 # --------------------------------------------------------------------------- #
 # MANUAL BUILD
 # --------------------------------------------------------------------------- #
-set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
-set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
-set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
-set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
+#set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
+#set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
+#set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
+#set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
 
 
 if(WIN32)
@@ -89,9 +89,22 @@ include_directories(${TBB_INCLUDE_DIR})
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(NOT WIN32)
-    message(STATUS "Searching for OpenGL GLX...")
+if(NOT WIN32 AND NOT DEFINED OPENGL_INCLUDE_DIR)
+    message(STATUS "Searching for OpenGL...")
     find_package(OpenGL REQUIRED GLX)
+
+    if(NOT EXISTS ${OPENGL_INCLUDE_DIR})
+        message(FATAL_ERROR "Failed to find OpenGL include directory.")
+    endif()
+
+    if(NOT EXISTS ${OPENGL_LIBRARIES})
+        message(FATAL_ERROR "Failed to find OpenGL lib directory.")
+    endif()
+
+    message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
+    message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
+    include_directories(${OPENGL_INCLUDE_DIR})
+    link_directories(${OPENGL_LIBRARIES})
 endif()
 
 # --------------------------------------------------------------------------- #
