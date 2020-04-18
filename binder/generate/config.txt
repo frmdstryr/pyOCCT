@@ -340,6 +340,9 @@
 -function PeriodicInterval::FirstIntersection
 -function PeriodicInterval::SecondIntersection
 
+# Abstract
+-function IFSelect_SelectDeduct:IFSelect_SelectDeduct
+
 -function IntCurveSurface_ThePolyhedronOfHInter::HasUMinSingularity
 -function IntCurveSurface_ThePolyhedronOfHInter::HasUMaxSingularity
 -function IntCurveSurface_ThePolyhedronOfHInter::HasVMinSingularity
