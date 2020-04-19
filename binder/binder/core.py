@@ -1356,6 +1356,25 @@ class CursorBinder(object):
         return self.cursor.is_abstract_record()
 
     @property
+    def has_unimplemented_methods(self):
+        # TODO: Doesn't support overloads
+        all_virtual_methods = set()
+        all_methods = set()
+        for m in self.methods:
+            if m.is_pure_virtual_method:
+                return True
+            all_methods.add(m.spelling)
+
+        for base in self._all_bases:
+            base.get_definition()
+            for m in base.methods:
+                if m.is_pure_virtual_method:
+                    all_virtual_methods.add(m.spelling)
+                else:
+                    all_methods.add(m.spelling)
+        return all_virtual_methods.difference(all_methods)
+
+    @property
     def is_const_method(self):
         return self.cursor.is_const_method()
 
@@ -2417,20 +2436,13 @@ def generate_class(binder):
 
     # Source
     tname = 'typename ' + qname if '::' in qname else qname
-    if qname in Generator.downcast_classes:
-        # TODO: parent?
-        src = [
-            'auto {} = static_cast<py::class_<{}{}{}>(mod.attr("{}"));\n'.format(
-                cls, tname, holder, bases, name)
-        ]
-    else:
-        src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(
+    src = ['py::class_<{}{}{}> {}({}, {}, \"{}\"{}{});\n'.format(
             tname, holder, bases, cls, parent, name_, docs, multi_base,
             local)]
 
     # Constructors
     src_ctor = []
-    if not binder.is_abstract:
+    if not binder.is_abstract: # Doesn't work and not binder.has_unimplemented_methods:
         for item in binder.ctors:
             if item.is_public:
                 item.parent_name = cls
