@@ -1366,7 +1366,9 @@ class CursorBinder(object):
             all_methods.add(m.spelling)
 
         for base in self._all_bases:
-            base.get_definition()
+            base = base.get_definition()
+            if base.is_null:
+                continue
             for m in base.methods:
                 if m.is_pure_virtual_method:
                     all_virtual_methods.add(m.spelling)
@@ -2442,7 +2444,7 @@ def generate_class(binder):
 
     # Constructors
     src_ctor = []
-    if not binder.is_abstract: # Doesn't work and not binder.has_unimplemented_methods:
+    if not binder.is_abstract:
         for item in binder.ctors:
             if item.is_public:
                 item.parent_name = cls
@@ -2452,6 +2454,11 @@ def generate_class(binder):
         if not src_ctor and binder.needs_default_ctor \
                 and qname not in Generator.excluded_functions:
             src_ctor = ['{}.def(py::init<>());\n'.format(cls)]
+
+            # If it has virtual methods tag it as abstract
+            if binder.has_unimplemented_methods:
+                src_ctor[0] = '// abstract virtual methods // ' + src_ctor[0]
+
 
     if src_ctor:
         src_ctor.insert(0, '\n// Constructors\n')

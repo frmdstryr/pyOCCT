@@ -237,9 +237,9 @@
 -function DsgPrs_RadiusPresentation::Add(const opencascade::handle<Prs3d_Presentation> &, const opencascade::handle<Prs3d_Drawer> &, const TCollection_ExtendedString &, const gp_Pnt &, const gp_Circ &, const Standard_Real, const Standard_Real, const DsgPrs_ArrowSide, const Standard_Boolean, const Standard_Boolean)
 
 # Abstract
--function Expr_UnaryExpression::Expr_UnaryExpression
--function Expr_BinaryExpression::Expr_BinaryExpression
--function Expr_SingleRelation::Expr_SingleRelation
+#-function Expr_UnaryExpression::Expr_UnaryExpression
+#-function Expr_BinaryExpression::Expr_BinaryExpression
+#-function Expr_SingleRelation::Expr_SingleRelation
 
 -function FilletPoint::FilletPoint
 -function FilletPoint::appendValue
@@ -310,9 +310,9 @@
 
 
 # Abstract
--function IFSelect_SelectDeduct:IFSelect_SelectDeduct
--function IFSelect_Selection::IFSelect_Selection
--function IFSelect_SelectControl::IFSelect_SelectControl
+#-function IFSelect_SelectDeduct:IFSelect_SelectDeduct
+#-function IFSelect_Selection::IFSelect_Selection
+#-function IFSelect_SelectControl::IFSelect_SelectControl
 -function IFSelect_ContextModif::Search
 -function IFSelect_EditForm::NbTouched
 -function IFSelect_IntParam::StaticName
