@@ -27,6 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
+option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -96,17 +97,16 @@ if(NOT WIN32)
 
 endif()
 
-
 # ----------------------------------------------------------------------- #
 # VTK
 # ----------------------------------------------------------------------- #
-if (MSVC)
+if(NOT DEFINED VTK_INCLUDE_DIRS)
     message(STATUS "Searching for VTK...")
     find_package(VTK REQUIRED)
-
-    message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
-    include_directories(${VTK_INCLUDE_DIRS})
 endif()
+
+message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
+include_directories(${VTK_INCLUDE_DIRS})
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -174,18 +174,6 @@ if(ENABLE_SMESH)
 
 
     # ----------------------------------------------------------------------- #
-    # VTK
-    # ----------------------------------------------------------------------- #
-    if(NOT DEFINED VTK_INCLUDE_DIRS)
-        message(STATUS "Searching for VTK...")
-        find_package(VTK REQUIRED)
-    endif()
-
-    message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
-    include_directories(${VTK_INCLUDE_DIRS})
-
-
-    # ----------------------------------------------------------------------- #
     # BOOST
     # ----------------------------------------------------------------------- #
     if(NOT DEFINED Boost_INCLUDE_DIR)
@@ -238,13 +226,13 @@ endif(ENABLE_SMESH)
 # --------------------------------------------------------------------------- #
 # PYBIND11
 # --------------------------------------------------------------------------- #
-IF(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/pybind11")
+if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/pybind11")
     message(STATUS "Adding pybind11 subdirectory.")
     add_subdirectory(pybind11)
-ELSE()
+else()
     message(STATUS "Searching for pybind11...")
     find_package(pybind11 REQUIRED)
-ENDIF()
+endif()
 
 
 # --------------------------------------------------------------------------- #
@@ -262,11 +250,42 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
 # Treat each .cxx file in src/modules as a module
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx)
 
+# Subset of modules to build when TEST_BUILD is ON
+set(TEST_MODULES AIS;
+                 Aspect;
+                 BRep;
+                 BRepBuilderAPI;
+                 BRepTools;
+                 Geom;
+                 gp;
+                 Graphic3d;
+                 IGESControl;
+                 MeshVS;
+                 OpenGl;
+                 Quantity;
+                 SMESH;
+                 STEPControl;
+                 TopoDS;
+                 V3d;
+                 XwWindow)
+
+# Issue warning if TEST_BUILD is ON
+if(TEST_BUILD)
+    message(WARNING "WARNING: TEST_BUILD mode. Not all modules will be generated.")
+endif()
+
 # OCCT modules
 foreach(SRC ${SRCS})
 
     # Get module name
     get_filename_component(MOD ${SRC} NAME_WE)
+
+    # Check for test modules
+    list(FIND TEST_MODULES ${MOD} TEST_MOD_INDEX)
+    if (TEST_BUILD AND ${TEST_MOD_INDEX} EQUAL -1)
+        message(STATUS "Skipping module ${MOD}")
+        continue()
+    endif()
 
     # Check for platform-specific modules
     if(WIN32 AND ${MOD} STREQUAL "XwWindow")
