@@ -36,7 +36,12 @@ typedef struct _xcolor {
 } XColor;
 */
 
+struct _XDisplay {
+
+};
+
 struct __GLXFBConfigRec {
+
 
 };
 
