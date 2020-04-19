@@ -386,6 +386,13 @@
 
 -function IntTools_PntOnFace::IsValid
 
+
+-function IVtkTools_SubPolyDataFilter::vtkTypeMacro
+-function IVtkTools_DisplayModeFilter::vtkTypeMacro
+-function IVtkTools_ShapeDataSource::vtkTypeMacro
+-function IVtkTools_ShapeObject::vtkTypeMacro
+-function IVtkTools_ShapePicker::vtkTypeMacro
+
 -function Law_Interpolate::ClearTangents
 
 -function LDOM_BasicAttribute::SetValue
