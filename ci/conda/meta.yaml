@@ -23,9 +23,6 @@ requirements:
     - tbb-devel
     - vtk
 
-    - mesa-libgl-devel-cos6-x86_64 # [linux]
-    - mesa-libegl-devel-cos6-x86_64 # [linux]
-
   run:
     - python
     # - wxpython
