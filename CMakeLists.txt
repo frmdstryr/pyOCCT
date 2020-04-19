@@ -36,15 +36,6 @@ set(pyOCCT_MINOR_VERSION 4)
 set(pyOCCT_PATCH_VERSION 0)
 set(pyOCCT_TWEAK_VERSION 0)
 
-# --------------------------------------------------------------------------- #
-# MANUAL BUILD
-# --------------------------------------------------------------------------- #
-#set(CONDA_PREFIX, "$ENV{HOME}/miniconda3/envs/pyOCCT")
-#set(TBB_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/tbb")
-#set(OpenCASCADE_INCLUDE_DIR "$ENV{CONDA_PREFIX}/include/opencascade")
-#set(OpenCASCADE_LIBRARY_DIR "$ENV{CONDA_PREFIX}/lib")
-
-
 if(WIN32)
     set(EXTENSION ".pyd")
 else(WIN32)
@@ -72,6 +63,12 @@ endif()
 if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "-fpermissive")
 endif()
+
+# --------------------------------------------------------------------------- #
+# pyOCCT Includes
+# --------------------------------------------------------------------------- #
+# Include before opencascade to patch InterfaceGraphic.hxx
+include_directories(inc)
 
 # --------------------------------------------------------------------------- #
 # TBB (for BVH header)
@@ -253,7 +250,7 @@ ENDIF()
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
-include_directories(inc)
+#include_directories(inc)
 set(OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${OUTPUT_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
