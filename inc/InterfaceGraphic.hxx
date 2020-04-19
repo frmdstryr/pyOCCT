@@ -41,17 +41,18 @@
 #include <GL/glx.h>
 
 // HACK: Xlib is screwing up the namespaces
-#undef Bool
-#undef CursorShape
-#undef Expose
-#undef KeyPress
-#undef KeyRelease
-#undef FocusIn
-#undef FocusOut
-#undef FontChange
-#undef None
+// #undef Bool
+// #undef CursorShape
+// #undef Expose
+// #undef KeyPress
+// #undef KeyRelease
+// #undef FocusIn
+// #undef FocusOut
+// #undef FontChange
+// #undef None
+//#undef Unsorted
 #undef Status
-#undef Unsorted
+
 
 #endif
 
