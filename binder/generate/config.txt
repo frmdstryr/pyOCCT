@@ -560,6 +560,8 @@
 -header* glext.h
 -header* NCollection_Shared.hxx
 
++header Aspect: xTypes.h
+
 +header BinMXCAFDoc: BinTools_LocationSet.hxx
 
 +header BRepMesh: IMeshData_Wire.hxx

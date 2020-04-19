@@ -21,7 +21,7 @@ The OCCT include files for Linux use these two X Windows related structs.
 Since pyOCCT doesn't need their internal details, it seems unnecessary to drag
 in X library files, which may not be present in all systems anyway.
 */
-
+#ifndef _WIN32
 #ifndef __xTypes_h__
 #define __xTypes_h__
 
@@ -36,9 +36,8 @@ typedef struct _xcolor {
 } XColor;
 */
 
-struct _XDisplay {
-
-};
+//struct _XDisplay {
+//};
 
 struct __GLXFBConfigRec {
 
@@ -46,3 +45,4 @@ struct __GLXFBConfigRec {
 };
 
 #endif /* !__xTypes_h */
+#endif
