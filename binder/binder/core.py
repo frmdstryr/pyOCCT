@@ -2479,14 +2479,8 @@ def generate_class(binder):
     for item in binder.methods:
         if item.is_public:
             item.parent_name = cls
-            method_src = generate_method(item)
-
-            # Comment out virtual methods
-            if item.is_pure_virtual_method:
-                for i, line in enumerate(method_src):
-                    method_src[i] = '// virtual // ' + line
-
-            src_methods += method_src
+            # TODO: Determine macro fn's eg  'vtkTypeMacro'
+            src_methods += generate_method(item)
     if src_methods:
         src_methods.insert(0, '\n// Methods\n')
         src += src_methods
@@ -2627,7 +2621,9 @@ def generate_method(binder):
 
     # Comment if excluded
     if binder.is_excluded:
-        prefix = '// {}'.format(prefix)
+        prefix = '// excluded // {}'.format(prefix)
+    elif binder.is_pure_virtual_method:
+        prefix = '// virtual // {}'.format(prefix)
 
     rtype = binder.rtype.spelling
     qname = binder.qualified_name
