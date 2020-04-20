@@ -393,6 +393,11 @@
 -function IVtkTools_ShapeObject::vtkTypeMacro
 -function IVtkTools_ShapePicker::vtkTypeMacro
 
+# IDK
+-function IVtkTools_ShapeObject::GetShapeSource_
+-function IVtkTools_ShapeObject::getKey_
+-function IVtkTools_ShapePicker::GetSelectionModes(const IVtk_IShape::Handle &)
+
 # TODO: How can doubl** be cast?
 -function IVtkOCC_ViewerSelector::Pick(double **, const int, const IVtk_IView::Handle &)
 -function IVtkOCC_ShapePickerAlgo::Pick(double **, const int)
@@ -683,6 +688,8 @@
 +header V3d: V3d_Viewer.hxx
 +header V3d: V3d_View.hxx
 
++header IVtkTools: vtkActor.h
++header IVtkTools: vtkRenderer.h
 +header IVtkVTK: vtkRenderer.h
 
 +header XCAFDoc: TCollection_ExtendedString.hxx
