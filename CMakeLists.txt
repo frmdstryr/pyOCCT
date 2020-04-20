@@ -54,9 +54,9 @@ endif(WIN32)
 
 # Known warnings
 if(NOT ENABLE_WARNINGS)
-    if(WIN32)
+    if(MSVC)
         set(WARNINGS "/wd4996 /wd4800 /wd4267 /wd4275 /wd4251 /wd4805 /wd4290 /wd4005 /wd4180 /wd4244 /wd4146 /wd4172")
-    else(WIN32)
+    else()
         set(WARNINGS "-Wall -Wno-deprecated-declarations -Wno-strict-aliasing")
     endif(WIN32)
 else(NOT ENABLE_WARNINGS)
