@@ -25,12 +25,13 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev  libglfw3-dev libgles2-mesa-dev
-      - name: Remove non MSVC compilers
+      - name: Remove system compilers
         if: matrix.os == 'windows-latest'
         shell: bash -l {0}
         run: |
             rm -Rf C:/ProgramData/chocolatey
             rm -Rf C:/Strawberry
+            rm -Rf 'C:/Program Files (x86)\Microsoft Visual Studio\2019\Enterprise'
       - name: Configure conda
         run: |
             conda info
