@@ -706,6 +706,8 @@
 # nodelete option -------------------------------------------------------------
 +nodelete TDF_LabelNode
 +nodelete Poly_CoherentTriPtr
++nodelete NCollection_SeqNode
++nodelete NCollection_ListNode
 
 # Excluded base classes -------------------------------------------------------
 -base BRepExtrema_OverlapTool: BVH_PairTraverse<Standard_Real, 3>
