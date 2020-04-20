@@ -27,8 +27,9 @@ jobs:
             sudo apt-get -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev  libglfw3-dev libgles2-mesa-dev
       - name: Remove chocolatey
         if: matrix.os == 'windows-latest'
+        shell: bash -l {0}
         run: |
-            rmdir C:/ProgramData/chocolatey /s /q
+            rm -Rf C:/ProgramData/chocolatey
       - name: Configure conda
         shell: bash -l {0}
         run: |
