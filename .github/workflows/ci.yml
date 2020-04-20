@@ -29,12 +29,11 @@ jobs:
         run: |
             conda info
             conda config --add channels conda-forge
-      - name: Create env
+      - name: Install conda
         shell: bash -l {0}
         run: |
-            conda create --yes --quiet --name pyOCCT python=${{ matrix.python-version }} conda-build
+            conda install python=${{ matrix.python-version }} conda-build
       - name: Build
         shell: bash -l {0}
         run: |
-            source activate pyOCCT
             conda build ci/conda
