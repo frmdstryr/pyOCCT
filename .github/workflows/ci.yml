@@ -25,12 +25,12 @@ jobs:
         run: |
             sudo apt-get update
             sudo apt-get -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev  libglfw3-dev libgles2-mesa-dev
-      #- name: Remove non MSVC compilers
-        #if: matrix.os == 'windows-latest'
-        #shell: bash -l {0}
-        #run: |
-            #rm -Rf C:/ProgramData/chocolatey
-            #rm -Rf C:/Strawberry
+      - name: Remove non MSVC compilers
+        if: matrix.os == 'windows-latest'
+        shell: bash -l {0}
+        run: |
+            rm -Rf C:/ProgramData/chocolatey
+            rm -Rf C:/Strawberry
       - name: Configure conda
         run: |
             conda info
@@ -39,5 +39,6 @@ jobs:
         run: |
             conda install python=${{ matrix.python-version }} conda-build
       - name: Build
+        shell: bash -l {0}
         run: |
             conda build ci/conda
