@@ -683,6 +683,8 @@
 +header V3d: V3d_Viewer.hxx
 +header V3d: V3d_View.hxx
 
++header IVtkVTK: vtkRenderer.h
+
 +header XCAFDoc: TCollection_ExtendedString.hxx
 
 +header XmlMXCAFDoc: TopTools_LocationSet.hxx
