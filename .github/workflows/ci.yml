@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-2016']
         python-version: ['3.6']
     steps:
       - uses: actions/checkout@v2
@@ -31,7 +31,6 @@ jobs:
         run: |
             rm -Rf C:/ProgramData/chocolatey
             rm -Rf C:/Strawberry
-            rm -Rf 'C:/Program Files (x86)\Microsoft Visual Studio\2019\Enterprise'
       - name: Configure conda
         run: |
             conda info
@@ -40,6 +39,6 @@ jobs:
         run: |
             conda install python=${{ matrix.python-version }} conda-build
       - name: Build
-        shell: bash -l {0}
+        #shell: bash -l {0}
         run: |
-            conda build ci/conda
+            conda build "ci/conda"
