@@ -393,6 +393,10 @@
 -function IVtkTools_ShapeObject::vtkTypeMacro
 -function IVtkTools_ShapePicker::vtkTypeMacro
 
+# TODO: How can doubl** be cast?
+-function IVtkOCC_ViewerSelector::Pick(double **, const int, const IVtk_IView::Handle &)
+-function IVtkOCC_ShapePickerAlgo::Pick(double **, const int)
+
 -function Law_Interpolate::ClearTangents
 
 -function LDOM_BasicAttribute::SetValue
