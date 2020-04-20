@@ -903,3 +903,11 @@
 # TDataXtd_ConstraintEnum seems to be missing
 +patch TDataXtd: (const int, const opencascade::handle<TNaming_NamedShape> &-->(const TDataXtd_ConstraintEnum, const opencascade::handle<TNaming_NamedShape> &
 +patch TDataXtd: (const int, Standard_OStream &)-->(const TDataXtd_ConstraintEnum, Standard_OStream &)
+
+# Standard_UUID is messed up
++patch Standard: py::class_<> cls_GUID(mod, "GUID", "None");-->py::class_<Standard_UUID> cls_Standard_UUID(mod, "Standard_UUID", "None");
++patch Standard: cls_GUID.def(py::init<>());-->cls_Standard_UUID.def(py::init<>());
++patch Standard: cls_GUID.def_readwrite("Data1", &Data1, "None");-->cls_Standard_UUID.def_readwrite("Data1", &Standard_UUID::Data1, "None");
++patch Standard: cls_GUID.def_readwrite("Data2", &Data2, "None");-->cls_Standard_UUID.def_readwrite("Data2", &Standard_UUID::Data2, "None");
++patch Standard: cls_GUID.def_readwrite("Data3", &Data3, "None");-->cls_Standard_UUID.def_readwrite("Data3", &Standard_UUID::Data3, "None");
+
