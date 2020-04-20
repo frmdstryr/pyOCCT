@@ -13,8 +13,8 @@ build:
 requirements:
   build:
     - python
-    - {{ compiler('cxx') }} # [win]
-    - vc 14 # [win]
+    #- {{ compiler('cxx') }} # [win]
+    #- vc 14 # [win]
     - cmake
     - ninja
     - pybind11
@@ -26,14 +26,20 @@ requirements:
 
   run:
     - python
+    #- vc 14 # [win]
+    - occt==7.4.0
     # - wxpython
     # - pyqt >=5
-    - vc 14 # [win]
-    - occt==7.4.0
 
 test:
+  requires:
+    - pytest
+    - vtk
   source_files:
+    - binder/generate/*.json
     - test
+  commands:
+    - pytest test -v
 
 about:
   home: https://github.com/LaughlinResearch/pyOCCT
