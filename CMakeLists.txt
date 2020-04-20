@@ -30,6 +30,15 @@ option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
 option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
+# Manual build
+# --------------------------------------------------------------------------- #
+#set(CONDA_PREFIX "$ENV{HOME}/miniconda3/envs/pyOCCT")
+#set(TBB_INCLUDE_DIR "${CONDA_PREFIX}/include/tbb/")
+#set(OpenCASCADE_INCLUDE_DIR "${CONDA_PREFIX}/include/opencascade")
+#set(OpenCASCADE_LIBRARY_DIR "${CONDA_PREFIX}/lib")
+#set(VTK_INCLUDE_DIRS "${CONDA_PREFIX}/include/vtk-8.2/")
+
+# --------------------------------------------------------------------------- #
 # SETTINGS
 # --------------------------------------------------------------------------- #
 set(pyOCCT_MAJOR_VERSION 7)
@@ -266,6 +275,8 @@ set(TEST_MODULES AIS;
                  SMESH;
                  STEPControl;
                  TopoDS;
+                 IVtkTools;
+                 Standard;
                  V3d;
                  XwWindow)
 
@@ -314,25 +325,21 @@ endforeach()
 
 # SMESH modules
 if(ENABLE_SMESH)
-    set(MAKE_LIB BOOL ON)
     foreach(MOD ${SMESH_MODULES})
 
         # Check Netgen
-        if(NOT ENABLE_NETGEN AND ${MOD} STREQUAL "NETGENPlugin" AND MAKE_LIB)
+        if(NOT ENABLE_NETGEN AND ${MOD} STREQUAL "NETGENPlugin")
             message(STATUS "Skipping ${MOD}")
-            set(MAKE_LIB OFF)
+            continue()
         endif()
 
-        if(MAKE_LIB)
-            file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/${MOD}.* ${CMAKE_CURRENT_SOURCE_DIR}/src/${MOD}_*)
-            # Add pybind11 module
-            pybind11_add_module(${MOD} ${SRCS})
-            target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
-                                                ${SMESH_ABS_LIBS})
-            set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
-            install(FILES ${OUTPUT_PATH}/${MOD}${EXTENSION}
-                    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/OCCT)
-        endif()
-        set(MAKE_LIB ON)
+        file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/${MOD}.* ${CMAKE_CURRENT_SOURCE_DIR}/src/${MOD}_*)
+        # Add pybind11 module
+        pybind11_add_module(${MOD} ${SRCS})
+        target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
+                                            ${SMESH_ABS_LIBS})
+        set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
+        install(FILES ${OUTPUT_PATH}/${MOD}${EXTENSION}
+                DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/OCCT)
     endforeach()
 endif()

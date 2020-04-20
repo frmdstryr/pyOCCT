@@ -13,7 +13,7 @@ build:
 requirements:
   build:
     - python
-    - {{ compiler('cxx') }}
+    - {{ compiler('cxx') }} # [win]
     - vc 14 # [win]
     - cmake
     - ninja
