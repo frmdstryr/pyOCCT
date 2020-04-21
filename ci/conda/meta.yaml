@@ -14,7 +14,7 @@ requirements:
     - {{ cdt('libx11-devel') }}  # [linux]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('mesa-libgl-devel') }}  # [linux]
-    - {{ cdt('mesa-libegl-devel-cos6-x86_64') }}  # [linux]
+    - {{ cdt('mesa-libegl-cos6-x86_64') }}  # [linux]
     - {{ cdt('libxi-devel') }}  # [linux]
     - cmake
     - ninja
