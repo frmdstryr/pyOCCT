@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# Fail on error
+set -e
+
 python binder/generate/run.py
 
 declare -a CMAKE_PLATFORM_FLAGS

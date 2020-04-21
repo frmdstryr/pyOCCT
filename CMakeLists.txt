@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 project(pyOCCT VERSION 7.4.0.0 LANGUAGES CXX)
 
 
@@ -59,7 +59,6 @@ if(ENABLE_FORCE AND MSVC)
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE")
 endif()
 
-
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
@@ -101,24 +100,6 @@ find_package(VTK REQUIRED)
 
 message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
 include_directories(${VTK_INCLUDE_DIRS})
-
-# --------------------------------------------------------------------------- #
-# OpenGL
-# --------------------------------------------------------------------------- #
-# if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-#     if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
-#         message(STATUS "Searching for OpenGL...")
-#         find_package(OpenGL REQUIRED GLX EGL)
-#     endif()
-#     if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
-#         message(FATAL_ERROR "Failed to find OpenGL library directory.")
-#     endif()
-#     message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
-#     message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
-#     include_directories(${OPENGL_EGL_INCLUDE_DIRS})
-#     link_directories(${OPENGL_egl_LIBRARY})
-#
-# endif()
 
 # --------------------------------------------------------------------------- #
 # SMESH

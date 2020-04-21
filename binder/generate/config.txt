@@ -3,7 +3,7 @@
 # Clang compiler arguments ----------------------------------------------------
 +arg -x
 +arg c++
-+arg -std=c++14
++arg -std=c++17
 +arg -fms-compatibility
 +arg -fms-extensions
 +arg -fms-compatibility-version=19
