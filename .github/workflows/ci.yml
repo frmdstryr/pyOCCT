@@ -34,5 +34,6 @@ jobs:
         run: |
             conda install python=${{ matrix.python-version }} conda-build conda-verify
       - name: Build
+        shell: bash -l {0}
         run: |
-            conda build "ci/conda"
+            conda build ci/conda
