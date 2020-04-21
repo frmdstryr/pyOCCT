@@ -40,11 +40,11 @@ cls.def(py::init<const TheSequenceType &>(), py::arg("theOther"));
 
 // Methods
 // Write "Sequence" and "ChangeSequence" because pybind11 seems to just return itself instead of the right object?
-//cls.def("Sequence", (const TheSequenceType & (TheHSequenceType::*)() const) &TheHSequenceType::Sequence, "None");
+cls.def("Sequence", (const TheSequenceType & (TheHSequenceType::*)() const) &TheHSequenceType::Sequence, "None");
 cls.def("Sequence", [](const TheHSequenceType &self) {const TheSequenceType &out = self.Sequence(); return out; }, "None");
 cls.def("Append", (void (TheHSequenceType::*)(const typename TheSequenceType::value_type &)) &TheHSequenceType::Append, "None", py::arg("theItem"));
 cls.def("Append", (void (TheHSequenceType::*)(TheSequenceType &)) &TheHSequenceType::Append, "None", py::arg("theSequence"));
-// cls.def("ChangeSequence", (TheSequenceType & (TheHSequenceType::*)()) &TheHSequenceType::ChangeSequence, "None");
+cls.def("ChangeSequence", (TheSequenceType & (TheHSequenceType::*)()) &TheHSequenceType::ChangeSequence, "None");
 cls.def("ChangeSequence", [](TheHSequenceType &self) {TheSequenceType &out = self.ChangeSequence(); return out; }, "None");
 cls.def_static("get_type_name_", (const char * (*)()) &TheHSequenceType::get_type_name, "None");
 cls.def_static("get_type_descriptor_", (const opencascade::handle<Standard_Type> & (*)()) &TheHSequenceType::get_type_descriptor, "None");
@@ -66,8 +66,8 @@ cls.def("Assign", (TheSequenceType & (TheHSequenceType::*)(const TheSequenceType
 cls.def("Remove", (void (TheHSequenceType::*)(typename TheHSequenceType::Iterator &)) &TheHSequenceType::Remove, "Remove one item", py::arg("thePosition"));
 cls.def("Remove", (void (TheHSequenceType::*)(const Standard_Integer)) &TheHSequenceType::Remove, "Remove one item", py::arg("theIndex"));
 cls.def("Remove", (void (TheHSequenceType::*)(const Standard_Integer, const Standard_Integer)) &TheHSequenceType::Remove, "Remove range of items", py::arg("theFromIndex"), py::arg("theToIndex"));
-// cls.def("Append", (void (TheHSequenceType::*)(const typename TheSequenceType::value_type &)) &TheHSequenceType::Append, "Append one item", py::arg("theItem"));
-// cls.def("Append", (void (TheHSequenceType::*)(TheSequenceType &)) &TheHSequenceType::Append, "Append another sequence (making it empty)", py::arg("theSeq"));
+cls.def("Append", (void (TheHSequenceType::*)(const typename TheSequenceType::value_type &)) &TheHSequenceType::Append, "Append one item", py::arg("theItem"));
+cls.def("Append", (void (TheHSequenceType::*)(TheSequenceType &)) &TheHSequenceType::Append, "Append another sequence (making it empty)", py::arg("theSeq"));
 cls.def("Prepend", (void (TheHSequenceType::*)(const typename TheSequenceType::value_type &)) &TheHSequenceType::Prepend, "Prepend one item", py::arg("theItem"));
 cls.def("Prepend", (void (TheHSequenceType::*)(TheSequenceType &)) &TheHSequenceType::Prepend, "Prepend another sequence (making it empty)", py::arg("theSeq"));
 cls.def("InsertBefore", (void (TheHSequenceType::*)(const Standard_Integer, const typename TheSequenceType::value_type &)) &TheHSequenceType::InsertBefore, "InsertBefore theIndex theItem", py::arg("theIndex"), py::arg("theItem"));
