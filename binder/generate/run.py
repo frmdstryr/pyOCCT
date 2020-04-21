@@ -13,13 +13,16 @@ from binder.core import Generator
 # Use conda instead of system lib/includes
 if sys.platform == 'win32':
     CONDA_PREFIX = os.path.join(os.environ.get('BUILD_PREFIX'), 'Library')
-    if not os.path.exists(CONDA_PREFIX):
+    OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
+    if not os.path.exists(OCC_DEFAULT_PATH):
         CONDA_PREFIX = os.environ.get('LIBRARY_PREFIX')
-
-    OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
+        OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
 else:
-    CONDA_PREFIX = os.environ.get('CONDA_PREFIX')
+    CONDA_PREFIX = os.environ.get('PREFIX')
     OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
+    if not os.path.exists(OCC_DEFAULT_PATH):
+        CONDA_PREFIX = os.environ.get('CONDA_PREFIX')
+        OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
 
 
 def gen_includes(opencascade_include_path='../include/opencascade',
