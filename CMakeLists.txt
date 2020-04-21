@@ -106,15 +106,17 @@ include_directories(${VTK_INCLUDE_DIRS})
 # OpenGL
 # --------------------------------------------------------------------------- #
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    if (NOT DEFINED OPENGL_INCLUDE_DIR)
+    if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
         message(STATUS "Searching for OpenGL...")
-        find_package(OpenGL REQUIRED)
+        find_package(OpenGL REQUIRED GLX EGL)
     endif()
-    if(NOT EXISTS ${OPENGL_INCLUDE_DIR})
+    if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
         message(FATAL_ERROR "Failed to find OpenGL library directory.")
     endif()
-    message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
-    include_directories(${OPENGL_INCLUDE_DIR})
+    message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
+    #message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
+    include_directories(${OPENGL_EGL_INCLUDE_DIRS})
+    #link_directories(${OPENGL_egl_LIBRARY})
 
 endif()
 
