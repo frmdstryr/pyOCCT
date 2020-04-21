@@ -105,7 +105,7 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(NOT WIN32)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
         message(STATUS "Searching for OpenGL...")
         find_package(OpenGL REQUIRED GLX EGL)
@@ -220,9 +220,9 @@ foreach(SRC ${OCCT_SRCS})
     # Get module name
     get_filename_component(MOD ${SRC} NAME_WE)
 
-    if(NOT ${MOD} STREQUAL "Standard")
-        continue()
-    endif()
+    #if(NOT ${MOD} STREQUAL "Standard")
+    #    continue()
+    #endif()
 
     # Check for platform-specific modules
     if(WIN32 AND ${MOD} STREQUAL "XwWindow")
