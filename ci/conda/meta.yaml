@@ -10,7 +10,7 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }}
+    - {{ compiler('cxx') }} # [win]
     - {{ cdt('libx11-devel') }}  # [linux]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('mesa-libgl-devel') }}  # [linux]
@@ -18,15 +18,15 @@ requirements:
     - {{ cdt('libxi-devel') }}  # [linux]
     - cmake
     - ninja
+    - pybind11
+    - libclang ==10.0.0
+    - clang ==10.0.0
 
   host:
     - python
     - occt ==7.4.0
     - tbb-devel
     - smesh ==8.3.0.3  # [win]
-    - pybind11
-    - libclang ==10.0.0
-    - clang ==10.0.0
 
   run:
     - python

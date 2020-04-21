@@ -11,8 +11,9 @@ if BINDER_ROOT not in sys.path:
 from binder.core import Generator
 
 # Use conda instead of system lib/includes
+BUILD_PREFIX = os.environ.get('BUILD_PREFIX')
 if sys.platform == 'win32':
-    CONDA_PREFIX = os.path.join(os.environ.get('BUILD_PREFIX'), 'Library')
+    CONDA_PREFIX = os.path.join(BUILD_PREFIX, 'Library')
     OCC_DEFAULT_PATH = os.path.join(CONDA_PREFIX, 'include', 'opencascade')
     if not os.path.exists(OCC_DEFAULT_PATH):
         CONDA_PREFIX = os.environ.get('LIBRARY_PREFIX')
@@ -113,6 +114,9 @@ def main():
     # on linux.
     clang_include_path = os.path.abspath(os.path.join(
         CONDA_PREFIX, 'lib', 'clang', args.libclang_version, 'include'))
+    if not os.path.exists(clang_include_path):
+        clang_include_path = os.path.abspath(os.path.join(
+            BUILD_PREFIX, 'lib', 'clang', args.libclang_version, 'include'))
 
     if not os.path.exists(clang_include_path):
         print(f"ERROR: libclang include path is does not exist:"
