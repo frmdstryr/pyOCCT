@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." ON)
+option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -110,25 +110,13 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
-        #if (DEFINED ENV{CONDA_BUILD} AND EXISTS "$ENV{BUILD_PREFIX}/$ENV{BUILD}/sysroot")
-        #   set(CMAKE_FIND_ROOT_PATH "$ENV{PREFIX}" "$ENV{BUILD_PREFIX}/$ENV{BUILD}/sysroot")
-        #endif()
-        message(STATUS "Searching for OpenGL")
-        find_package(OpenGL COMPONENTS GLX EGL)
-    endif()
-    if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
-        message(FATAL_ERROR "Failed to find OpenGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
-    endif()
-    if (NOT EXISTS ${OPENGL_egl_LIBRARY})
-        message(WARNING "Failed to find OpenGL library directory.")
-    endif()
-    message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
-    message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
-    include_directories(${OPENGL_EGL_INCLUDE_DIRS})
-    link_directories(${OPENGL_egl_LIBRARY})
-
+if(NOT WIN32)
+    message(STATUS "Searching for OpenGL...")
+    find_package(OpenGL REQUIRED)
+    message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
+    message(STATUS "OpenGL library directory: ${OPENGL_LIBRARIES}")
+    include_directories(${OPENGL_INCLUDE_DIR})
+    link_directories(${OPENGL_LIBRARIES})
 endif()
 
 
