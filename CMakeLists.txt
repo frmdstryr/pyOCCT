@@ -59,6 +59,10 @@ if(ENABLE_FORCE AND MSVC)
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE")
 endif()
 
+if(NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+endif()
+
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
@@ -105,11 +109,12 @@ include_directories(${VTK_INCLUDE_DIRS})
 # OpenGL
 # --------------------------------------------------------------------------- #
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    if (EXISTS $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot)
+        set(OPENGL_EGL_INCLUDE_DIRS $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot/usr/include)
+    endif()
+
     if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
         message(STATUS "Searching for OpenGL")
-        if ($ENV{CONDA_BUILD})
-            set(CMAKE_FIND_ROOT_PATH $ENV{PREFIX} $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot)
-        endif()
         find_package(OpenGL COMPONENTS GLX EGL)
     endif()
     if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
