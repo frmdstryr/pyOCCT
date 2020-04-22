@@ -39,6 +39,11 @@ jobs:
         run: |
             conda install python=${{ matrix.python-version }} conda-build conda-verify
       - name: Build
-        shell: bash -l {0}
+        if: matrix.os != 'windows-latest'
         run: |
             conda build ci/conda
+      - name: Build windows
+        if: matrix.os == 'windows-latest'
+        run: |
+            call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat"
+            call "conda build ci\\conda"
