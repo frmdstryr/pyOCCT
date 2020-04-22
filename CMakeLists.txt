@@ -105,7 +105,9 @@ message(STATUS "Searching for VTK...")
 find_package(VTK REQUIRED)
 
 message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
+message(STATUS "VTK library directory: ${VTK_LIBRARIES}")
 include_directories(${VTK_INCLUDE_DIRS})
+link_directories(${VTK_LIBRARIES})
 
 # --------------------------------------------------------------------------- #
 # OpenGL

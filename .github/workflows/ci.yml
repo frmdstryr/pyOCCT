@@ -42,11 +42,11 @@ jobs:
         shell: bash -l {0}
         run: |
             conda build ci/conda --build-only --output-folder ci/dist/
-      - name: Test
-        shell: bash -l {0}
-        run: |
-            conda build ci/dist --test --keep-going
       - uses: actions/upload-artifact@v1
         with:
             name: Built Package
             path: ci/dist
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+            conda build ci/dist/pyocct-*.tar.bz2 --test --keep-going
