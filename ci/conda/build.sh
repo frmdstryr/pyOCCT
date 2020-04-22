@@ -4,7 +4,7 @@
 set -e
 
 python binder/generate/run.py
-
+cat log.txt
 
 rm -Rf build
 mkdir build
