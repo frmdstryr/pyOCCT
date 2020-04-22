@@ -38,11 +38,15 @@ jobs:
       - name: Install conda-build
         run: |
             conda install python=${{ matrix.python-version }} conda-build conda-verify
-      - name: Activate VC
-        if: matrix.os == 'windows-latest'
-        run: |
-            "C:\\%ProgramFiles(x86)%\\Microsoft Visual Studio\\2019\\Enterprise\\VC\\Auxiliary\\Build\\vcvarsall.bat"
       - name: Build
         shell: bash -l {0}
         run: |
-            conda build ci/conda
+            conda build ci/conda --build-only --output-folder ci/dist/
+      - name: Test
+        shell: bash -l {0}
+        run: |
+            conda build ci/dist --test --keep-going
+      - uses: actions/upload-artifact@v1
+        with:
+            name: Built Package
+            path: ci/dist

@@ -19,12 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 import unittest
 
-from OCCT.BRepPrimAPI import BRepPrimAPI_MakeBox
-from OCCT.NETGENPlugin import (NETGENPlugin_SimpleHypothesis_3D,
-                               NETGENPlugin_NETGEN_2D3D)
-from OCCT.SMESH import SMESH_Gen
-
-
 class Test_NETGENPlugin(unittest.TestCase):
     """
     Test for NETGENPlugin
@@ -34,6 +28,12 @@ class Test_NETGENPlugin(unittest.TestCase):
         """
         Test a tetrahedral mesh of a simple solid box
         """
+        from OCCT.BRepPrimAPI import BRepPrimAPI_MakeBox
+        from OCCT.NETGENPlugin import (NETGENPlugin_SimpleHypothesis_3D,
+                                    NETGENPlugin_NETGEN_2D3D)
+        from OCCT.SMESH import SMESH_Gen
+
+
         box = BRepPrimAPI_MakeBox(10, 10, 10).Solid()
 
         gen = SMESH_Gen()

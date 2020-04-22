@@ -10,7 +10,7 @@ build:
 
 requirements:
   build:
-    #- {{ compiler('cxx') }} # [win]
+    - {{ compiler('cxx') }} # [win]
     - cmake
     - ninja
     - pybind11
