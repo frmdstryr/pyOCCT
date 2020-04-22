@@ -102,6 +102,34 @@ message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
 include_directories(${VTK_INCLUDE_DIRS})
 
 # --------------------------------------------------------------------------- #
+# OpenGL
+# --------------------------------------------------------------------------- #
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
+        message(STATUS "Searching for OpenGL")
+        find_package(OpenGL COMPONENTS GLX EGL)
+    endif()
+    if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
+        message(FATAL_ERROR "Failed to find OpenGL library directory.")
+    endif()
+    if (NOT EXISTS ${OPENGL_egl_LIBRARY} AND $ENV{CONDA_BUILD} )
+        message(WARNING "Setting EGL lib to conda's ")
+        set(OPENGL_egl_LIBRARY $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot/usr/lib64)
+    endif()
+
+    if (NOT EXISTS ${OPENGL_egl_LIBRARY})
+        message(FATAL_ERROR "Failed to find OpenGL library directory.")
+    endif()
+
+    message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
+    message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
+    include_directories(${OPENGL_EGL_INCLUDE_DIRS})
+    link_directories(${OPENGL_egl_LIBRARY})
+
+endif()
+
+
+# --------------------------------------------------------------------------- #
 # SMESH
 # --------------------------------------------------------------------------- #
 set(SMESH_ABS_LIBS)
