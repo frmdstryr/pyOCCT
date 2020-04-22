@@ -27,6 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
+option(TEST_BUILD "Build a subset of modules for testing." ON)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -59,9 +60,9 @@ if(ENABLE_FORCE AND MSVC)
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE")
 endif()
 
-if(NOT MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-endif()
+#if(NOT MSVC)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+#endif()
 
 # --------------------------------------------------------------------------- #
 # pyOCCT
@@ -109,26 +110,19 @@ include_directories(${VTK_INCLUDE_DIRS})
 # OpenGL
 # --------------------------------------------------------------------------- #
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    if (EXISTS $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot)
-        set(OPENGL_EGL_INCLUDE_DIRS $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot/usr/include)
-    endif()
-
     if (NOT DEFINED OPENGL_EGL_INCLUDE_DIRS)
+        if ($ENV{CONDA_BUILD} AND EXISTS "$ENV{BUILD_PREFIX}/$ENV{BUILD}/sysroot")
+           set(CMAKE_FIND_ROOT_PATH "$ENV{PREFIX}" "$ENV{BUILD_PREFIX}/$ENV{BUILD}/sysroot")
+        endif()
         message(STATUS "Searching for OpenGL")
         find_package(OpenGL COMPONENTS GLX EGL)
     endif()
     if(NOT EXISTS ${OPENGL_EGL_INCLUDE_DIRS})
-        message(FATAL_ERROR "Failed to find OpenGL library directory.")
+        message(FATAL_ERROR "Failed to find OpenGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
     endif()
-    if (NOT EXISTS ${OPENGL_egl_LIBRARY} AND $ENV{CONDA_BUILD})
-        message(WARNING "Setting EGL lib to conda's ")
-        set(OPENGL_egl_LIBRARY $ENV{BUILD_PREFIX}/$ENV{HOST}/sysroot/usr/lib64)
-    endif()
-
     if (NOT EXISTS ${OPENGL_egl_LIBRARY})
-        message(FATAL_ERROR "Failed to find OpenGL library directory.")
+        message(WARNING "Failed to find OpenGL library directory.")
     endif()
-
     message(STATUS "EGL include directory: ${OPENGL_EGL_INCLUDE_DIRS}")
     message(STATUS "EGL include libs: ${OPENGL_egl_LIBRARY}")
     include_directories(${OPENGL_EGL_INCLUDE_DIRS})
@@ -231,15 +225,45 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
 # Treat each .cxx file in src/modules as a module
 file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
+
+# Subset of modules to build when TEST_BUILD is ON
+set(TEST_MODULES AIS;
+                 Aspect;
+                 BRep;
+                 BRepBuilderAPI;
+                 BRepTools;
+                 Geom;
+                 gp;
+                 Graphic3d;
+                 IGESControl;
+                 MeshVS;
+                 OpenGl;
+                 Quantity;
+                 SMESH;
+                 STEPControl;
+                 StdStorage;
+                 IFSelect;
+                 TopoDS;
+                 V3d;
+                 XwWindow)
+
+# Issue warning if TEST_BUILD is ON
+if(TEST_BUILD)
+    message(WARNING "WARNING: TEST_BUILD mode. Not all modules will be generated.")
+endif()
+
 # OCCT modules
 foreach(SRC ${OCCT_SRCS})
 
     # Get module name
     get_filename_component(MOD ${SRC} NAME_WE)
 
-    #if(NOT ${MOD} STREQUAL "Standard")
-    #    continue()
-    #endif()
+    # Check for test modules
+    list(FIND TEST_MODULES ${MOD} _INDEX)
+    if(TEST_BUILD AND NOT ${_INDEX} GREATER -1)
+        message(STATUS "Skipping module ${MOD}")
+        continue()
+    endif()
 
     # Check for platform-specific modules
     if(WIN32 AND ${MOD} STREQUAL "XwWindow")
