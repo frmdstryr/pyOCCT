@@ -30,7 +30,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
             sudo apt update
-            sudo apt -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev
+            sudo apt -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev  libglfw3-dev libgles2-mesa-dev
       - name: Configure conda
         run: |
             conda info
