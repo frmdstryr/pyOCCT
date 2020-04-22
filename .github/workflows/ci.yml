@@ -26,6 +26,11 @@ jobs:
         run: |
            rm -Rf C:/ProgramData/chocolatey
            rm -Rf C:/Strawberry
+      - name: Install OpenGL
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+            sudo apt update
+            sudo apt -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev
       - name: Configure conda
         run: |
             conda info

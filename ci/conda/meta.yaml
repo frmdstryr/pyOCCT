@@ -11,11 +11,6 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }} # [win]
-    - {{ cdt('libx11-devel') }}  # [linux]
-    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
-    - {{ cdt('mesa-libgl-devel') }}  # [linux]
-    - {{ cdt('mesa-libegl-devel') }}  # [linux]
-    - {{ cdt('libxi-devel') }}  # [linux]
     - cmake
     - ninja
     - pybind11
