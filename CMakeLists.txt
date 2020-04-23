@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." OFF)
+option(TEST_BUILD "Build a subset of modules for testing." ON)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
