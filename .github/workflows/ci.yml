@@ -15,39 +15,43 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ['3.6']
     steps:
-      - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - name: "Clone pyOCCT"
+        uses: actions/checkout@v2
+
+      - name: "Install miniconda"
+        uses: goanpeca/setup-miniconda@v1
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-      - name: Remove system compilers
+      - name: "Remove system compilers"
         if: matrix.os == 'windows-latest'
         shell: bash -l {0}
         run: |
            rm -Rf C:/ProgramData/chocolatey
            rm -Rf C:/Strawberry
-      - name: Install OpenGL
+      - name: "Install OpenGL"
         if: matrix.os == 'ubuntu-latest'
         run: |
             sudo apt update
             sudo apt -q -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev  libglfw3-dev libgles2-mesa-dev
-      - name: Configure conda
+      - name: "Configure conda"
         run: |
             conda info
             conda config --add channels conda-forge
-      - name: Install conda-build
+      - name: "Install conda-build"
         run: |
             conda install python=${{ matrix.python-version }} conda-build conda-verify
-      - name: Build
+      - name: "Build"
         shell: bash -l {0}
         run: |
             mkdir ci/dist/
             conda build ci/conda --no-test --output-folder ci/dist/
-      - uses: actions/upload-artifact@v1
+      - name: "Upload package"
+        uses: actions/upload-artifact@v1
         with:
             name: Built Package
             path: ci/dist
-      - name: Run tests
+      - name: "Run tests"
         shell: bash -l {0}
         run: |
             conda build ci/dist/*/pyocct-*.tar.bz2 --test --keep-going
