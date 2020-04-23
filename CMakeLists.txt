@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." OFF)
+option(TEST_BUILD "Build a subset of modules for testing." ON)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -113,26 +113,24 @@ link_directories(${VTK_LIBRARIES})
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
-if(NOT WIN32)
-    if(APPLE)
-        message(STATUS "Searching for OpenGL...")
-        find_package(OpenGL REQUIRED)
-    else()
-        message(STATUS "Searching for OpenGL, GLX, and EGL...")
-        find_package(OpenGL REQUIRED GLX EGL)
-    endif()
-    message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
-    message(STATUS "OpenGL library directory: ${OPENGL_LIBRARIES}")
-    include_directories(${OPENGL_INCLUDE_DIR})
-    link_directories(${OPENGL_LIBRARIES})
-
-    if(APPLE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework OpenGL")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
-        find_library(Cocoa REQUIRED)
-    endif()
+if(WIN32)
+    message(STATUS "Searching for OpenGL...")
+    find_package(OpenGL REQUIRED)
+elseif(APPLE)
+    message(STATUS "Searching for OpenGL...")
+    find_package(OpenGL REQUIRED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework OpenGL")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
+    find_library(Cocoa REQUIRED)
+else()
+    message(STATUS "Searching for OpenGL, GLX, and EGL...")
+    find_package(OpenGL REQUIRED GLX EGL)
 endif()
 
+message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
+message(STATUS "OpenGL library directory: ${OPENGL_LIBRARIES}")
+include_directories(${OPENGL_INCLUDE_DIR})
+link_directories(${OPENGL_LIBRARIES})
 
 # --------------------------------------------------------------------------- #
 # SMESH
@@ -229,25 +227,27 @@ file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
 
 # Subset of modules to build when TEST_BUILD is ON
-set(TEST_MODULES AIS;
-                 Aspect;
-                 BRep;
-                 BRepBuilderAPI;
-                 BRepTools;
-                 Geom;
-                 gp;
-                 Graphic3d;
-                 IGESControl;
-                 MeshVS;
-                 OpenGl;
-                 Quantity;
-                 SMESH;
-                 STEPControl;
-                 StdStorage;
-                 IFSelect;
-                 TopoDS;
-                 V3d;
-                 XwWindow)
+set(TEST_MODULES
+        #AIS;
+        #Aspect;
+        #BRep;
+        #BRepBuilderAPI;
+        #BRepTools;
+        #Geom;
+        #gp;
+        #Graphic3d;
+        #IGESControl;
+        #MeshVS;
+        OpenGl;
+        #Quantity;
+        #SMESH;
+        #STEPControl;
+        #StdStorage;
+        #IFSelect;
+        #TopoDS;
+        #V3d;
+        #XwWindow
+    )
 
 # Issue warning if TEST_BUILD is ON
 if(TEST_BUILD)

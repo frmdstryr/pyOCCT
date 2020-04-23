@@ -17,16 +17,16 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
+import os
 import sys
 import pytest
 
 
 def is_netgen_available():
-    try:
-        from OCCT import NETGENPlugin
-        return True
-    except ModuleNotFoundError:
-        return False
+    import OCCT
+    PY_EXT = '.pyd' if sys.platform == 'win32' else '.so'
+    smesh_path = os.path.join(OCCT.__path__[0], 'NETGENPlugin' + PY_EXT)
+    return os.path.exists(smesh_path)
 
 
 @pytest.mark.skipif(not is_netgen_available(), 'NETGEN was not built')
