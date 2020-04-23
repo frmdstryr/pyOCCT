@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." ON)
+option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -63,7 +63,7 @@ endif()
 if(NOT MSVC)
     # TODO: Figure out how to handle methods that return functions
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
 endif()
 
 # --------------------------------------------------------------------------- #
@@ -206,7 +206,6 @@ else()
     find_package(pybind11 REQUIRED)
 endif()
 
-
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
@@ -224,25 +223,30 @@ file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
 # Subset of modules to build when TEST_BUILD is ON
 set(TEST_MODULES
-        #AIS;
-        #Aspect;
-        #BRep;
-        #BRepBuilderAPI;
-        #BRepTools;
-        #Geom;
-        #gp;
-        #Graphic3d;
-        #IGESControl;
-        #MeshVS;
+        AIS;
+        Aspect;
+        BRep;
+        BRepBuilderAPI;
+        BRepTools;
+        Font;
+        Geom;
+        gp;
+        Graphic3d;
+        IGESControl;
+        MeshVS;
         OpenGl;
-        #Quantity;
+        Quantity;
         #SMESH;
-        #STEPControl;
-        #StdStorage;
-        #IFSelect;
-        #TopoDS;
-        #V3d;
-        #XwWindow
+        STEPControl;
+        StdStorage;
+        IFSelect;
+        TopoDS;
+        #IVtk;
+        #IVtkOCC;
+        #IVtkTools;
+        #IVtkVTK;
+        V3d;
+        Xw;
     )
 
 # Issue warning if TEST_BUILD is ON
@@ -287,12 +291,17 @@ foreach(SRC ${OCCT_SRCS})
 
     # Add pybind11 module
     pybind11_add_module(${MOD} ${SRC})
-    if(${MOD} STREQUAL "OpenGL")
-        target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
-                                            ${OPENGL_LIBRARIES})
-    else()
-        target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES})
+    target_link_libraries(${MOD}
+        PUBLIC ${OpenCASCADE_LIBRARIES} ${PYTHON_LIBRARIES})
+
+    if(${MOD} STREQUAL "OpenGl")
+        target_link_libraries(${MOD} PRIVATE ${OPENGL_LIBRARIES})
     endif()
+
+    if(${MOD} MATCHES "IVtk.*")
+        target_link_libraries(${MOD} PUBLIC ${VTK_LIBRARIES})
+    endif()
+
 
     set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
     target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/occt)
@@ -319,6 +328,7 @@ if(ENABLE_SMESH)
         # Add pybind11 module
         pybind11_add_module(${MOD} ${SRC})
         target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
+                                            ${PYTHON_LIBRARIES}
                                             ${SMESH_ABS_LIBS})
         set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
         target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/smesh)
