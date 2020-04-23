@@ -63,7 +63,7 @@ endif()
 if(NOT MSVC)
     # TODO: Figure out how to handle methods that return functions
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
 endif()
 
 # --------------------------------------------------------------------------- #
@@ -114,10 +114,11 @@ link_directories(${VTK_LIBRARIES})
 # OpenGL
 # --------------------------------------------------------------------------- #
 if(NOT WIN32)
-    message(STATUS "Searching for OpenGL...")
-    if(${CMAKE_SYSTEM_NAME} MATCHES "DARWIN")
+    if(APPLE)
+        message(STATUS "Searching for OpenGL...")
         find_package(OpenGL REQUIRED)
     else()
+        message(STATUS "Searching for OpenGL, GLX, and EGL...")
         find_package(OpenGL REQUIRED GLX EGL)
     endif()
     message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
@@ -125,7 +126,7 @@ if(NOT WIN32)
     include_directories(${OPENGL_INCLUDE_DIR})
     link_directories(${OPENGL_LIBRARIES})
 
-    if(${CMAKE_SYSTEM_NAME} MATCHES "DARWIN")
+    if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework OpenGL")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
         find_library(Cocoa REQUIRED)
@@ -267,7 +268,7 @@ foreach(SRC ${OCCT_SRCS})
     endif()
 
     # Disable Vtk for now
-    if(${MOD} MATCHES "IVtk*")
+    if(${MOD} MATCHES "IVtk.*")
         message(STATUS "Skipping Vtk module ${MOD}")
         continue()
     endif()
