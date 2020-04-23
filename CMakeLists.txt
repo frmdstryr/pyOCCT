@@ -118,9 +118,7 @@ if(WIN32)
 elseif(APPLE)
     message(STATUS "Searching for OpenGL...")
     find_package(OpenGL REQUIRED)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-framework,OpenGL")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-framework,Cocoa")
-    find_library(Cocoa REQUIRED)
+    find_package(Cocoa REQUIRED)
 else()
     message(STATUS "Searching for OpenGL, GLX, and EGL...")
     find_package(OpenGL REQUIRED GLX EGL)
@@ -289,7 +287,13 @@ foreach(SRC ${OCCT_SRCS})
 
     # Add pybind11 module
     pybind11_add_module(${MOD} ${SRC})
-    target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES})
+    if(${MOD} STREQUAL "OpenGL")
+        target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
+                                            ${OPENGL_LIBRARIES})
+    else()
+        target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES})
+    endif()
+
     set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
     target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/occt)
     install(FILES ${OUTPUT_PATH}/${MOD}${EXTENSION}
