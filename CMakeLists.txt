@@ -63,6 +63,7 @@ endif()
 if(NOT MSVC)
     # TODO: Figure out how to handle methods that return functions
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
 endif()
 
 # --------------------------------------------------------------------------- #
@@ -114,7 +115,11 @@ link_directories(${VTK_LIBRARIES})
 # --------------------------------------------------------------------------- #
 if(NOT WIN32)
     message(STATUS "Searching for OpenGL...")
-    find_package(OpenGL REQUIRED)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "DARWIN")
+        find_package(OpenGL REQUIRED)
+    else()
+        find_package(OpenGL REQUIRED GLX EGL)
+    endif()
     message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
     message(STATUS "OpenGL library directory: ${OPENGL_LIBRARIES}")
     include_directories(${OPENGL_INCLUDE_DIR})
@@ -258,6 +263,12 @@ foreach(SRC ${OCCT_SRCS})
     list(FIND TEST_MODULES ${MOD} _INDEX)
     if(TEST_BUILD AND NOT ${_INDEX} GREATER -1)
         message(STATUS "Skipping module ${MOD}")
+        continue()
+    endif()
+
+    # Disable Vtk for now
+    if(${MOD} MATCHES "IVtk*")
+        message(STATUS "Skipping Vtk module ${MOD}")
         continue()
     endif()
 
