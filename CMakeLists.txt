@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." OFF)
+option(TEST_BUILD "Build a subset of modules for testing." ON)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -108,7 +108,6 @@ find_package(VTK REQUIRED)
 message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
 message(STATUS "VTK library directory: ${VTK_LIBRARIES}")
 include_directories(${VTK_INCLUDE_DIRS})
-link_directories(${VTK_LIBRARIES})
 
 # --------------------------------------------------------------------------- #
 # OpenGL
@@ -119,16 +118,17 @@ if(WIN32)
 elseif(APPLE)
     message(STATUS "Searching for OpenGL...")
     find_package(OpenGL REQUIRED)
-    find_package(Cocoa REQUIRED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-framework,OpenGL")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-framework,Cocoa")
+    find_library(Cocoa REQUIRED)
 else()
     message(STATUS "Searching for OpenGL, GLX, and EGL...")
     find_package(OpenGL REQUIRED GLX EGL)
 endif()
 
 message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
-message(STATUS "OpenGL library directory: ${OPENGL_LIBRARIES}")
+message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
 include_directories(${OPENGL_INCLUDE_DIR})
-link_directories(${OPENGL_LIBRARIES})
 
 # --------------------------------------------------------------------------- #
 # SMESH
@@ -265,6 +265,12 @@ foreach(SRC ${OCCT_SRCS})
         continue()
     endif()
 
+    # Disable Vtk for now
+    if(${MOD} MATCHES "IVtk.*")
+        message(STATUS "Skipping Vtk module ${MOD}")
+        continue()
+    endif()
+
     # Check for platform-specific modules
     if(WIN32 AND ${MOD} STREQUAL "XwWindow")
         message(STATUS "Skipping platform-specific module ${MOD}")
@@ -281,20 +287,9 @@ foreach(SRC ${OCCT_SRCS})
         continue()
     endif()
 
-    # Libraries to link
-    set(MOD_LIBS ${OpenCASCADE_LIBRARIES})
-
-    if(${MOD} STREQUAL "OpenGL")
-        set(MOD_LIBS "${MOD_LIBS} ${OPENGL_LIBRARIES}")
-    endif()
-
-    if(${MOD} MATCHES "IVtk.*")
-        set(MOD_LIBS "${MOD_LIBS} ${VTK_LIBRARIES}")
-    endif()
-
     # Add pybind11 module
     pybind11_add_module(${MOD} ${SRC})
-    target_link_libraries(${MOD} PUBLIC ${MOD_LIBS})
+    target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES})
     set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
     target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/occt)
     install(FILES ${OUTPUT_PATH}/${MOD}${EXTENSION}
