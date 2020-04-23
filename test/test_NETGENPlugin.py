@@ -17,43 +17,44 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
-import unittest
+import sys
+import pytest
 
-class Test_NETGENPlugin(unittest.TestCase):
+def is_netgen_available():
+    try:
+        from OCCT import NETGENPlugin
+        return True
+    except ModuleNotFoundError:
+        return False
+
+
+@pytest.mark.skipIf(not is_netgen_available, 'NETGEN was not built')
+def test_Box3D():
     """
-    Test for NETGENPlugin
+    Test a tetrahedral mesh of a simple solid box
     """
+    from OCCT.BRepPrimAPI import BRepPrimAPI_MakeBox
+    from OCCT.NETGENPlugin import (NETGENPlugin_SimpleHypothesis_3D,
+                                NETGENPlugin_NETGEN_2D3D)
+    from OCCT.SMESH import SMESH_Gen
 
-    def test_Box3D(self):
-        """
-        Test a tetrahedral mesh of a simple solid box
-        """
-        from OCCT.BRepPrimAPI import BRepPrimAPI_MakeBox
-        from OCCT.NETGENPlugin import (NETGENPlugin_SimpleHypothesis_3D,
-                                    NETGENPlugin_NETGEN_2D3D)
-        from OCCT.SMESH import SMESH_Gen
+    box = BRepPrimAPI_MakeBox(10, 10, 10).Solid()
 
+    gen = SMESH_Gen()
+    mesh = gen.CreateMesh(0, True)
 
-        box = BRepPrimAPI_MakeBox(10, 10, 10).Solid()
+    hyp = NETGENPlugin_SimpleHypothesis_3D(0, 0, gen)
+    hyp.SetLocalLength(1.0)
 
-        gen = SMESH_Gen()
-        mesh = gen.CreateMesh(0, True)
+    NETGENPlugin_NETGEN_2D3D(1, 0, gen)
 
-        hyp = NETGENPlugin_SimpleHypothesis_3D(0, 0, gen)
-        hyp.SetLocalLength(1.0)
+    mesh.ShapeToMesh(box)
+    mesh.AddHypothesis(box, 0)
+    mesh.AddHypothesis(box, 1)
 
-        NETGENPlugin_NETGEN_2D3D(1, 0, gen)
+    success = gen.Compute(mesh, box)
+    assert success
 
-        mesh.ShapeToMesh(box)
-        mesh.AddHypothesis(box, 0)
-        mesh.AddHypothesis(box, 1)
+    assert mesh.NbTetras() == 4767
+    assert mesh.NbNodes() == 1189
 
-        success = gen.Compute(mesh, box)
-        self.assertTrue(success)
-
-        self.assertEqual(mesh.NbTetras(), 4767)
-        self.assertEqual(mesh.NbNodes(), 1189)
-
-
-if __name__ == '__main__':
-    unittest.main()
