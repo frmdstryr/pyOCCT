@@ -50,4 +50,4 @@ jobs:
       - name: Run tests
         shell: bash -l {0}
         run: |
-            conda build ci/dist/pyocct-*.tar.bz2 --test --keep-going
+            conda build ci/dist/*/pyocct-*.tar.bz2 --test --keep-going

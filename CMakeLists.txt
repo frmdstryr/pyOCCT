@@ -63,6 +63,7 @@ endif()
 if(NOT MSVC)
     # TODO: Figure out how to handle methods that return functions
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -no-undefined")
 endif()
 
 # --------------------------------------------------------------------------- #
@@ -122,7 +123,9 @@ if(NOT WIN32)
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "DARWIN")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework OpenGL")
+        link_libraries("-framework OpenGL")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
+        link_libraries("-framework Cocoa")
         find_library(Cocoa REQUIRED)
     endif()
 endif()
@@ -210,7 +213,6 @@ endif()
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
-include_directories(inc)
 set(OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${OUTPUT_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
