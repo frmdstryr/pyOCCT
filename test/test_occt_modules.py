@@ -68,14 +68,14 @@ def debug_module(mod):
         run_cmd(f'dumpbin /dependents {mod_path}')
     else:
         run_cmd(f'ldd {mod_path}')
-        out1 = run_cmd(f'nm -gD {mod_path}', verbose=False)
-        out2 = run_cmd(f'nm -gDC {mod_path}', verbose=False)
-        for a, b in zip(out1.splitlines(), out2.splitlines()):
-            print(a)
+        #out1 = run_cmd(f'nm -gD {mod_path}', verbose=False)
+        #out2 = run_cmd(f'nm -gDC {mod_path}', verbose=False)
+        #for a, b in zip(out1.splitlines(), out2.splitlines()):
+            #print(a)
             # Print demangled output
-            if a != b:
-                print(b)
-                print("")
+            #if a != b:
+                #print(b)
+                #print("")
 
 def run_cmd(cmd, grep=None, exclude=None, verbose=True):
     if verbose:

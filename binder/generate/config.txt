@@ -494,6 +494,9 @@
 
 -function ShapeFix_WireSegment::ShapeFix_WireSegment(const TopoDS_Wire &, const TopAbs_Orientation)
 
+# Undefined symbol on Linux
+-function ShapeFix_Edge::Context
+
 -function StdPersistent_DataXtd_Constraint::Import
 -function StdPersistent_DataXtd_PatternStd::Import
 -function StdPersistent_TopLoc::Translate_
@@ -568,6 +571,10 @@
 -function XSControl_Vars::GetPoint
 -function XSControl_Vars::GetPoint2d
 -function XSControl_Vars::GetShape
+
+
+-function Xw_Window::DisplayConnection
+
 
 # Headers ---------------------------------------------------------------------
 -header* AdvApp2Var_Data_f2c.hxx
