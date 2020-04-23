@@ -40,11 +40,11 @@ cls.def(py::init<const TheSequenceType &>(), py::arg("theOther"));
 
 // Methods
 // Write "Sequence" and "ChangeSequence" because pybind11 seems to just return itself instead of the right object?
-cls.def("Sequence", (const TheSequenceType & (TheHSequenceType::*)() const) &TheHSequenceType::Sequence, "None");
+// cls.def("Sequence", (const TheSequenceType & (TheHSequenceType::*)() const) &TheHSequenceType::Sequence, "None");
 cls.def("Sequence", [](const TheHSequenceType &self) {const TheSequenceType &out = self.Sequence(); return out; }, "None");
 cls.def("Append", (void (TheHSequenceType::*)(const typename TheSequenceType::value_type &)) &TheHSequenceType::Append, "None", py::arg("theItem"));
 cls.def("Append", (void (TheHSequenceType::*)(TheSequenceType &)) &TheHSequenceType::Append, "None", py::arg("theSequence"));
-cls.def("ChangeSequence", (TheSequenceType & (TheHSequenceType::*)()) &TheHSequenceType::ChangeSequence, "None");
+// cls.def("ChangeSequence", (TheSequenceType & (TheHSequenceType::*)()) &TheHSequenceType::ChangeSequence, "None");
 cls.def("ChangeSequence", [](TheHSequenceType &self) {TheSequenceType &out = self.ChangeSequence(); return out; }, "None");
 cls.def_static("get_type_name_", (const char * (*)()) &TheHSequenceType::get_type_name, "None");
 cls.def_static("get_type_descriptor_", (const opencascade::handle<Standard_Type> & (*)()) &TheHSequenceType::get_type_descriptor, "None");

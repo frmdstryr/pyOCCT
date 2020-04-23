@@ -96,7 +96,7 @@ class Test_TColgp_HSequenceOfPnt(unittest.TestCase):
         p1 = gp_Pnt()
         p2 = gp_Pnt(1, 0, 0)
         p3 = gp_Pnt(2, 0, 0)
-        seq = TColgp_HSequenceOfPnt()
+        seq = TColgp_SequenceOfPnt()
         seq.Append(p1)
         seq.Append(p2)
         seq.Append(p3)
@@ -107,7 +107,7 @@ class Test_TColgp_HSequenceOfPnt(unittest.TestCase):
         Test TColgp_HSequenceOfPnt::Sequence
         """
         seq = self._hseq.Sequence()
-        self.assertIsInstance(seq, TColgp_HSequenceOfPnt)
+        self.assertIsInstance(seq, TColgp_SequenceOfPnt)
         self.assertEqual(seq.Length(), 3)
         p = seq.Value(1)
         self.assertAlmostEqual(p.X(), 0.)
