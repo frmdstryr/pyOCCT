@@ -20,6 +20,7 @@
 import sys
 import pytest
 
+
 def is_netgen_available():
     try:
         from OCCT import NETGENPlugin
@@ -28,7 +29,7 @@ def is_netgen_available():
         return False
 
 
-@pytest.mark.skipIf(not is_netgen_available, 'NETGEN was not built')
+@pytest.mark.skipif(not is_netgen_available(), 'NETGEN was not built')
 def test_Box3D():
     """
     Test a tetrahedral mesh of a simple solid box
