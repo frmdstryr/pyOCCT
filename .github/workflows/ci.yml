@@ -41,7 +41,8 @@ jobs:
       - name: Build
         shell: bash -l {0}
         run: |
-            conda build ci/conda --build-only --output-folder ci/dist/
+            mkdir ci/dist/
+            conda build ci/conda --no-test --output-folder ci/dist/
       - uses: actions/upload-artifact@v1
         with:
             name: Built Package
