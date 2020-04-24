@@ -27,7 +27,7 @@ option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." ON)
+option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -62,6 +62,8 @@ endif()
 
 if(NOT MSVC)
     # TODO: Figure out how to handle methods that return functions
+    message(STATUS "Flags: ${CMAKE_CXX_FLAGS}")
+    message(STATUS "Linker flags: ${CMAKE_MODULE_LINKER_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
 endif()
@@ -112,16 +114,20 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 # OpenGL
 # --------------------------------------------------------------------------- #
+message(STATUS "Searching for OpenGL...")
 if(WIN32)
-    message(STATUS "Searching for OpenGL...")
     find_package(OpenGL REQUIRED)
 elseif(APPLE)
-    message(STATUS "Searching for OpenGL...")
     find_package(OpenGL REQUIRED)
     #find_package(Cocoa REQUIRED)
 else()
-    message(STATUS "Searching for OpenGL, GLX, and EGL...")
-    find_package(OpenGL REQUIRED GLX EGL)
+    if (DEFINED ENV{CONDA_BUILD})
+        set(CONDA_SYSROOT "$ENV{PREFIX}/$ENV{HOST}/sysroot")
+        set(OPENGL_INCLUDE_DIR "${CONDA_SYSROOT}/usr/include")
+        set(OPENGL_LIBRARIES "${CONDA_SYSROOT}/usr/lib64/libGL.so")
+    else()
+        find_package(OpenGL REQUIRED GLX EGL)
+    endif()
 endif()
 
 message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
@@ -223,8 +229,8 @@ file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
 # Subset of modules to build when TEST_BUILD is ON
 set(TEST_MODULES
-        AIS;
-        Aspect;
+        #AIS;
+        #Aspect;
         #BRep;
         #BRepBuilderAPI;
         #BRepTools;
@@ -241,13 +247,13 @@ set(TEST_MODULES
         #StdStorage;
         Standard;
         #IFSelect;
-        TopoDS;
+        #TopoDS;
         #IVtk;
         #IVtkOCC;
         #IVtkTools;
         #IVtkVTK;
-        V3d;
-        Xw;
+        #V3d;
+        #Xw;
     )
 
 # Issue warning if TEST_BUILD is ON
