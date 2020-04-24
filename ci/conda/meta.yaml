@@ -17,18 +17,20 @@ requirements:
     - python-clang ==10.0.0
     - libclang ==10.0.0
     - clang ==10.0.0
+    - python *py{{CONDA_PY}}*
 
   host:
-    - python
+    - python *py{{CONDA_PY}}*
     - occt ==7.4.0
     - tbb-devel
     - smesh ==8.3.0.3  # [win]
 
   run:
-    - python
-    - freeimage
+    - python *py{{CONDA_PY}}*
     - occt ==7.4.0
     - smesh ==8.3.0.3  # [win]
+    # Required to save screenshots as png, jpg, etc..
+    - freeimage
 
 test:
   requires:
