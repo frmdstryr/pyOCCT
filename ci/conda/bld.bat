@@ -6,8 +6,6 @@ cd build
 
 cmake .. -G "Ninja" ^
     -DCMAKE_BUILD_TYPE="Release" ^
-    -DCMAKE_PREFIX_PATH:FILEPATH="%LIBRARY_PREFIX%" ^
-    -DCMAKE_INSTALL_PREFIX:FILEPATH="%LIBRARY_PREFIX%" ^
     -DENABLE_SMESH=OFF ^
     -DENABLE_NETGEN=OFF ^
     -DENABLE_FORCE=OFF ^
@@ -21,4 +19,4 @@ ninja install
 if errorlevel 1 exit 1
 
 cd ..
-python setup.py install
+python setup.py install --prefix="%PREFIX%"
