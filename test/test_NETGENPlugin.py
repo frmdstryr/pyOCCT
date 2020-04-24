@@ -29,7 +29,7 @@ def is_netgen_available():
     return os.path.exists(smesh_path)
 
 
-@pytest.mark.skipif(not is_netgen_available(), 'NETGEN was not built')
+@pytest.mark.skipif(not is_netgen_available(), reason='NETGEN was not built')
 def test_Box3D():
     """
     Test a tetrahedral mesh of a simple solid box

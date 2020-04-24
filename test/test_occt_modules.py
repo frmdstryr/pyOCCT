@@ -50,9 +50,9 @@ def get_modules():
     modules = [p.split(".")[0] for p in files if p.endswith(PY_EXT)]
 
     if sys.platform == 'win32':
-        excludes = ('Cocoa', 'Xw', 'XwWindow')
+        excludes = ('Cocoa', 'Xw')
     elif sys.platform == 'darwin':
-        excludes = ('WNT', 'Xw', 'XwWindow')
+        excludes = ('WNT', 'Xw')
     else:
         excludes = ('WNT', 'Cocoa')
 

@@ -48,7 +48,7 @@ def is_smesh_built():
     return os.path.exists(smesh_path)
 
 
-@pytest.mark.skipif(not is_smesh_built(), "SMESH was not built")
+@pytest.mark.skipif(not is_smesh_built(), reason="SMESH was not built")
 @pytest.mark.parametrize('mod', ALL_MODULES)
 def test_module(mod):
     try:
