@@ -21,6 +21,8 @@ def get_search_paths():
         path = os.environ.get(env_var)
         if path:
             yield path
+    if sys.platform == 'win32':
+        yield join(os.environ.get('BUILD_PREFIX'), 'Library')
     return '.'
 
 # Use conda instead of system lib/includes
@@ -92,7 +94,7 @@ def main():
         '-i',
         help='Path to opencascade includes',
         dest='opencascade_include_path',
-        default=find_occt_include_dir())
+        default='')
 
     parser.add_argument(
         '-o',
@@ -104,13 +106,16 @@ def main():
         '--clang',
         help='Path to clang includes',
         dest='clang_include_path',
-        default=find_clang_include_dir())
+        default='')
 
     args = parser.parse_args()
 
-    if not exists(args.opencascade_include_path):
+    opencascade_include_path = args.opencascade_include_path or find_occt_include_dir()
+    clang_include_path = args.clang_include_path or find_clang_include_dir()
+
+    if not exists(opencascade_include_path):
         print(f"ERROR: OpenCASCADE include path does not exist:"
-              f"{args.opencascade_include_path}")
+              f"{opencascade_include_path}")
         sys.exit(1)
 
     if not exists(args.pyocct_path):
@@ -118,22 +123,20 @@ def main():
               f"{args.pyocct_path}")
         sys.exit(1)
 
-    # TODO: Move this to the binder?
-    print('Collecting OpenCASCADE headers...')
-    gen_dir = abspath(join(BINDER_ROOT, 'generate'))
-    occt_mods = gen_includes(args.opencascade_include_path, gen_dir)
-
     # Force using conda's clangdev includes
     # TODO: This may not be needed on other systems but was getting errors
     # on linux.
-    if not exists(args.clang_include_path):
+    if not exists(clang_include_path):
         print(f"ERROR: libclang include path is does not exist:"
-              f"{args.clang_include_path}")
+              f"{clang_include_path}")
         sys.exit(1)
 
-    main = Generator(occt_mods,
-                     args.opencascade_include_path,
-                     args.clang_include_path)
+    # TODO: Move this to the binder?
+    print('Collecting OpenCASCADE headers...')
+    gen_dir = abspath(join(BINDER_ROOT, 'generate'))
+    occt_mods = gen_includes(opencascade_include_path, gen_dir)
+
+    main = Generator(occt_mods, opencascade_include_path, clang_include_path)
 
     pyocct_inc = abspath(join(args.pyocct_path, 'inc'))
     pyocct_src = abspath(join(args.pyocct_path, 'src', 'occt'))

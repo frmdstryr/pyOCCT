@@ -572,6 +572,8 @@
 -function XSControl_Vars::GetPoint2d
 -function XSControl_Vars::GetShape
 
+# Unresolved symbol
+-function Xw_Window::DisplayConnection
 
 # Headers ---------------------------------------------------------------------
 -header* AdvApp2Var_Data_f2c.hxx
