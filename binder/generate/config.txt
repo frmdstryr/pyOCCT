@@ -573,9 +573,6 @@
 -function XSControl_Vars::GetShape
 
 
--function Xw_Window::DisplayConnection
-
-
 # Headers ---------------------------------------------------------------------
 -header* AdvApp2Var_Data_f2c.hxx
 -header* AIS_LocalStatus.hxx
