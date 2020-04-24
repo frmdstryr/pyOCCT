@@ -11,10 +11,6 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }} # [not linux]
-    - {{ cdt('mesa-libgl-devel') }}  # [linux]
-    - {{ cdt('mesa-libegl-devel') }} # [linux]
-    - {{ cdt('libxi-devel') }}       # [linux]
-    - {{ cdt('libxext-devel') }}     # [linux]
     - cmake
     - ninja
     - pybind11
@@ -24,6 +20,10 @@ requirements:
     - python
 
   host:
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+    - {{ cdt('mesa-libegl-devel') }} # [linux]
+    - {{ cdt('libxi-devel') }}       # [linux]
+    - {{ cdt('libxext-devel') }}     # [linux]
     - python
     - occt ==7.4.0
     - tbb-devel
