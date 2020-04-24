@@ -223,8 +223,8 @@ file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
 # Subset of modules to build when TEST_BUILD is ON
 set(TEST_MODULES
-        #AIS;
-        #Aspect;
+        AIS;
+        Aspect;
         #BRep;
         #BRepBuilderAPI;
         #BRepTools;
@@ -240,7 +240,7 @@ set(TEST_MODULES
         #STEPControl;
         #StdStorage;
         Standard;
-        IFSelect;
+        #IFSelect;
         TopoDS;
         #IVtk;
         #IVtkOCC;
