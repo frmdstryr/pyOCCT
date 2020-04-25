@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.6']
+        os: ['ubuntu-latest', 'windows-latest']
+        python-version: ['3.6', '3.7', '3.8']
     steps:
       - name: "Clone pyOCCT"
         uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
       - name: "Upload package"
         uses: actions/upload-artifact@v1
         with:
-            name: Built Package
+            name: pyocct-py${{ matrix.python-version }}-(${{ matrix.os }})
             path: ci/dist
       - name: "Run tests"
         shell: bash -l {0}
