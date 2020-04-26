@@ -10,12 +10,11 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }} # [win]
+    - {{ compiler('cxx') }} # [not linux]
     - cmake
     - ninja
     - pybind11
     - python-clang ==10.0.0
-    - libclang ==10.0.0
     - clang ==10.0.0
     - python
 
