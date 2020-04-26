@@ -25,9 +25,9 @@ project(pyOCCT VERSION 7.4.0.0 LANGUAGES CXX)
 # --------------------------------------------------------------------------- #
 option(ENABLE_SMESH "Enable SMESH" OFF)
 option(ENABLE_NETGEN "Enable Netgen" OFF)
+option(ENABLE_VTK "Enable VTK" OFF)
 option(ENABLE_WARNINGS "Disable warning output." OFF)
 option(ENABLE_FORCE "Force build even if unresolved externals are found" OFF)
-option(TEST_BUILD "Build a subset of modules for testing." OFF)
 
 # --------------------------------------------------------------------------- #
 # SETTINGS
@@ -68,17 +68,35 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-z,defs")
 endif()
 
+
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
 # Must be included before opencascade so the InterfaceGraphic.hxx patch works
 include_directories(inc)
 
+
 # --------------------------------------------------------------------------- #
 # TBB (for BVH header)
 # --------------------------------------------------------------------------- #
 message(STATUS "Searching for TBB...")
 find_package(TBB REQUIRED)
+
+
+# --------------------------------------------------------------------------- #
+# OpenGL
+# --------------------------------------------------------------------------- #
+message(STATUS "Searching for OpenGL...")
+if(WIN32 OR APPLE)
+    find_package(OpenGL REQUIRED)
+else()
+    find_package(OpenGL REQUIRED GLX EGL)
+endif()
+
+message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
+message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
+include_directories(${OPENGL_INCLUDE_DIR})
+
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -101,39 +119,17 @@ message(STATUS "OpenCASCADE library directory: ${OpenCASCADE_LIBRARY_DIR}")
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
 
-# --------------------------------------------------------------------------- #
+
+# ----------------------------------------------------------------------- #
 # VTK
-# --------------------------------------------------------------------------- #
-message(STATUS "Searching for VTK...")
-find_package(VTK REQUIRED)
+# ----------------------------------------------------------------------- #
+if (ENABLE_VTK OR ENABLE_SMESH)
+    message(STATUS "Searching for VTK...")
+    find_package(VTK REQUIRED)
 
-message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
-message(STATUS "VTK library directory: ${VTK_LIBRARIES}")
-include_directories(${VTK_INCLUDE_DIRS})
-
-# --------------------------------------------------------------------------- #
-# OpenGL
-# --------------------------------------------------------------------------- #
-message(STATUS "Searching for OpenGL...")
-if(WIN32)
-    find_package(OpenGL REQUIRED)
-elseif(APPLE)
-    find_package(OpenGL REQUIRED)
-    #find_package(Cocoa REQUIRED)
-else()
-    #if (DEFINED ENV{CONDA_BUILD})
-    #    #set(CONDA_SYSROOT "$ENV{PREFIX}/$ENV{HOST}/sysroot")
-    #    set(CONDA_SYSROOT "$ENV{PREFIX}/x86_64-conda_cos6-linux-gnu/sysroot")
-    #    set(OPENGL_INCLUDE_DIR "${CONDA_SYSROOT}/usr/include")
-    #    set(OPENGL_LIBRARIES "${CONDA_SYSROOT}/usr/lib64/libGL.so")
-    #else()
-    find_package(OpenGL REQUIRED GLX EGL)
-    #endif()
+    message(STATUS "VTK include directory: ${VTK_INCLUDE_DIRS}")
+    include_directories(${VTK_INCLUDE_DIRS})
 endif()
-
-message(STATUS "OpenGL include directory: ${OPENGL_INCLUDE_DIR}")
-message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
-include_directories(${OPENGL_INCLUDE_DIR})
 
 # --------------------------------------------------------------------------- #
 # SMESH
@@ -174,7 +170,6 @@ if(ENABLE_SMESH)
     # message(STATUS "Boost include directory: ${Boost_INCLUDE_DIR}")
     # include_directories(${Boost_INCLUDE_DIR})
 
-
     # ----------------------------------------------------------------------- #
     # PTHREAD
     # ----------------------------------------------------------------------- #
@@ -213,6 +208,7 @@ else()
     find_package(pybind11 REQUIRED)
 endif()
 
+
 # --------------------------------------------------------------------------- #
 # pyOCCT
 # --------------------------------------------------------------------------- #
@@ -227,62 +223,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_PATH}")
 # Treat each .cxx file in src/modules as a module
 file(GLOB OCCT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/occt/*.cxx)
 
-
-# Subset of modules to build when TEST_BUILD is ON
-set(TEST_MODULES
-        AIS;
-        Aspect;
-        BRep;
-        #BRepBuilderAPI;
-        #BRepTools;
-        Font;
-        #Geom;
-        #gp;
-        Graphic3d;
-        #IGESControl;
-        #MeshVS;
-        #OpenGl;
-        #Quantity;
-        #SMESH;
-        #STEPControl;
-        #StdStorage;
-        Standard;
-        #IFSelect;
-        #TopoDS;
-        #IVtk;
-        #IVtkOCC;
-        #IVtkTools;
-        #IVtkVTK;
-        V3d;
-        Xw;
-    )
-
-# Issue warning if TEST_BUILD is ON
-if(TEST_BUILD)
-    message(WARNING "WARNING: TEST_BUILD mode. Not all modules will be generated.")
-endif()
-
 # OCCT modules
 foreach(SRC ${OCCT_SRCS})
 
     # Get module name
     get_filename_component(MOD ${SRC} NAME_WE)
 
-    # Check for test modules
-    list(FIND TEST_MODULES ${MOD} _INDEX)
-    if(TEST_BUILD AND NOT ${_INDEX} GREATER -1)
-        message(STATUS "Skipping module ${MOD}")
-        continue()
-    endif()
-
-    # Disable Vtk for now
-    if(${MOD} MATCHES "IVtk.*")
+    if(NOT ENABLE_VTK AND ${MOD} MATCHES "IVtk.*")
         message(STATUS "Skipping Vtk module ${MOD}")
         continue()
     endif()
 
     # Check for platform-specific modules
-    if(WIN32 AND ${MOD} STREQUAL "Xw")
+    if((WIN32 OR APPLE) AND ${MOD} STREQUAL "Xw")
         message(STATUS "Skipping platform-specific module ${MOD}")
         continue()
     endif()
@@ -292,7 +245,7 @@ foreach(SRC ${OCCT_SRCS})
         continue()
     endif()
 
-    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux" AND ${MOD} STREQUAL "Cocoa")
+    if(NOT APPLE AND ${MOD} STREQUAL "Cocoa")
         message(STATUS "Skipping platform-specific module ${MOD}")
         continue()
     endif()
@@ -309,7 +262,6 @@ foreach(SRC ${OCCT_SRCS})
     if(${MOD} MATCHES "IVtk.*")
         target_link_libraries(${MOD} PUBLIC ${VTK_LIBRARIES})
     endif()
-
 
     set_target_properties(${MOD} PROPERTIES SUFFIX ${EXTENSION} COMPILE_FLAGS ${WARNINGS})
     target_include_directories(${MOD} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/occt)
