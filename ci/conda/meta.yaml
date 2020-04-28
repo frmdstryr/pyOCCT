@@ -7,7 +7,6 @@ source:
 
 build:
   number: 0
-  string: py{{ CONDA_PY }}
 
 requirements:
   build:
@@ -15,15 +14,15 @@ requirements:
     - cmake
     - ninja
     - pybind11
-    - python-clang ==10.0.0
-    - clang ==10.0.0
-    - python
+    - python-clang
+    - clang
+    - python =={{ PY_VER }}
     - tbb-devel
     - occt ==7.4.0
     - smesh ==8.3.0.3
 
   run:
-    - python
+    - python =={{ PY_VER }}
     - occt ==7.4.0
     - smesh ==8.3.0.3
 
