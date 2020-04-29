@@ -10,19 +10,19 @@ build:
 
 requirements:
   build:
-    - {{ compiler('cxx') }} # [not linux]
+    - {{ compiler('cxx') }} # [win]
     - cmake
     - ninja
     - pybind11
     - python-clang
-    - clang
-    - python =={{ PY_VER }}
+    - clangdev
+    - python {{ python }}
     - tbb-devel
     - occt ==7.4.0
     - smesh ==8.3.0.3
 
   run:
-    - python =={{ PY_VER }}
+    - python {{ python }}
     - occt ==7.4.0
     - smesh ==8.3.0.3
 
