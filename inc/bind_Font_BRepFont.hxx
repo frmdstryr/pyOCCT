@@ -47,10 +47,7 @@ public:
         const Font_StrictLevel    theStrictLevel = Font_StrictLevel_Any)
         : Font_BRepFont(theFontName, theFontAspect, theSize, theStrictLevel) {}
 
-    void* operator new (size_t theSize) {
-        throw std::bad_alloc();
-
-    }
-    void operator delete (void* theAddress) {}
+    // HACK: Make it public
+    DEFINE_STANDARD_ALLOC
 
 };

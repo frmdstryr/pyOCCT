@@ -634,6 +634,8 @@
 +header BVH_PrimitiveSet<T, N>: bind_BVH_Object.hxx
 +header BVH_Triangulation<T, N>: bind_BVH_PrimitiveSet.hxx
 
++header Font: bind_Font_BRepFont.hxx
+
 +header Graphic3d: bind_BVH_Set.hxx
 +header Graphic3d: Precision.hxx
 
