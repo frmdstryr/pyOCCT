@@ -1,4 +1,4 @@
-python binder/generate/run.py
+python binder/generate/run.py -c config.txt
 if errorlevel 1 exit 1
 
 mkdir build
@@ -12,10 +12,10 @@ cmake .. -G "Ninja" ^
     -DPTHREAD_INCLUDE_DIRS:FILEPATH="%LIBRARY_PREFIX%/include"
 if errorlevel 1 exit 1
 
-ninja -j2
+ninja -j1
 if errorlevel 1 exit 1
 
-ninja install -j2
+ninja install -j1
 if errorlevel 1 exit 1
 
 cd ..
