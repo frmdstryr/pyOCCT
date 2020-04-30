@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #pragma once
 
+#include <pyOCCT_Common.hxx>
 #include <Font_BRepFont.hxx>
+
 class Font_BRepFont_: public Font_BRepFont {
 public:
     //! Empty constructor
@@ -48,6 +50,6 @@ public:
         : Font_BRepFont(theFontName, theFontAspect, theSize, theStrictLevel) {}
 
     // HACK: Make it public
+    // WARNING: THIS IS A MEMORY LEAK IF YOU DON'T KEEP THE REFERENCE IN PYTHON
     DEFINE_STANDARD_ALLOC
-
 };
