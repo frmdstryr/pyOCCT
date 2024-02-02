@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 template<typename TheHArray2Type, typename TheArray2Type>
 void bind_Define_HArray2(py::module &mod, std::string const &name) {
 
-py::class_<TheHArray2Type, opencascade::handle<TheHArray2Type>, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
+py::class_<TheHArray2Type, opencascade::handle<TheHArray2Type>, TheArray2Type, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
 
 // Constructors
 cls.def(py::init<const Standard_Integer, const Standard_Integer, const Standard_Integer, const Standard_Integer>(), py::arg("theRowLow"), py::arg("theRowUpp"), py::arg("theColLow"), py::arg("theColUpp"));

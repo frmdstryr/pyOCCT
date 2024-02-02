@@ -33,12 +33,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 template<typename TheHArray1Type, typename TheArray1Type>
 void bind_Define_HArray1(py::module &mod, std::string const &name) {
 
-py::class_<TheHArray1Type, opencascade::handle<TheHArray1Type>, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
+py::class_<TheHArray1Type, opencascade::handle<TheHArray1Type>, TheArray1Type, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
 
 // Constructors
 cls.def(py::init<>());
 cls.def(py::init<const Standard_Integer, const Standard_Integer>(), py::arg("theLower"), py::arg("theUpper"));
 cls.def(py::init<const Standard_Integer, const Standard_Integer, const typename TheArray1Type::value_type &>(), py::arg("theLower"), py::arg("theUpper"), py::arg("theValue"));
+cls.def(py::init<const typename TheArray1Type::value_type &, const Standard_Integer, const Standard_Integer, const bool>(), py::arg("theBegin"), py::arg("theUpper"), py::arg("theLower"), py::arg("unused"));
 cls.def(py::init<const TheArray1Type &>(), py::arg("theOther"));
 
 // Methods
