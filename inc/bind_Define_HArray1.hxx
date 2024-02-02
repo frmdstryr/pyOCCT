@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 template<typename TheHArray1Type, typename TheArray1Type>
 void bind_Define_HArray1(py::module &mod, std::string const &name) {
 
-py::class_<TheHArray1Type, opencascade::handle<TheHArray1Type>, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
+py::class_<TheHArray1Type, opencascade::handle<TheHArray1Type>, TheArray1Type, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
 
 // Constructors
 cls.def(py::init<>());
