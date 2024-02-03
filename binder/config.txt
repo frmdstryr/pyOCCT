@@ -1115,11 +1115,6 @@
 
 +patch bind_BOPTools_PairSelector: std::vector<PairIDs>-->std::vector<typename BOPTools_PairSelector<Dimension>::PairIDs>
 
-# Workaround a pybind check with multiple inheritance and non-default bases
-+patch bind_NCollection_Array1: py::class_<NCollection_Array1<TheItemType>>-->py::class_<NCollection_Array1<TheItemType>, std::unique_ptr<NCollection_Array1<TheItemType>, pyocct::deleter<NCollection_Array1<TheItemType>>>>
-+patch bind_NCollection_Array2: py::class_<NCollection_Array2<TheItemType>,-->py::class_<NCollection_Array2<TheItemType>, std::unique_ptr<NCollection_Array2<TheItemType>, pyocct::deleter<NCollection_Array2<TheItemType>>>,
-+patch bind_NCollection_Sequence: py::class_<NCollection_Sequence<TheItemType>,-->py::class_<NCollection_Sequence<TheItemType>, std::unique_ptr<NCollection_Sequence<TheItemType>, pyocct::deleter<NCollection_Sequence<TheItemType>>>,
-
 +patch bind_BVH_BaseBox: template <typename T, int N>-->template <typename T, int N, template <class /*T*/, int /*N*/> class TheDerivedBox>
 +patch bind_BVH_BaseBox: BVH_BaseBox<T, N>-->BVH_BaseBox<T, N, TheDerivedBox>
 +patch bind_BVH_Distance: cls_BVH_Distance.def(py::init<>());-->// cls_BVH_Distance.def(py::init<>());

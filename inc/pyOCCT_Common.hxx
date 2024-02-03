@@ -34,9 +34,4 @@ namespace py = pybind11;
 // Use opencascade::handle as holder type for Standard_Transient types
 PYBIND11_DECLARE_HOLDER_TYPE(T, opencascade::handle<T>, true);
 
-// trelau's trick used to bypass pybind's holder check
-namespace pyocct {
-    template<typename T> struct deleter { void operator() (T *o) const { delete o; } };
-}
-
 #endif

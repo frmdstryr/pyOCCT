@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 template<typename TheHSequenceType, typename TheSequenceType>
 void bind_Define_HSequence(py::module &mod, std::string const &name) {
 
-py::class_<TheHSequenceType, opencascade::handle<TheHSequenceType>, TheSequenceType, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
+py::class_<TheHSequenceType, opencascade::handle<TheHSequenceType>, Standard_Transient> cls(mod, name.c_str(), "None", py::multiple_inheritance());
 
 // Constructors
 cls.def(py::init<>());
