@@ -6,6 +6,6 @@ dependencies:
   - clangdev
   - python-clang
   - libcxx
-  - occt=7.8.0
+  - occt=7.8.1
   - tbb-devel
   - rapidjson

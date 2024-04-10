@@ -31,7 +31,7 @@ option(ENABLE_WARNINGS "Disable warning output." OFF)
 # --------------------------------------------------------------------------- #
 set(pyOCCT_MAJOR_VERSION 7)
 set(pyOCCT_MINOR_VERSION 8)
-set(pyOCCT_PATCH_VERSION 0)
+set(pyOCCT_PATCH_VERSION 1)
 set(pyOCCT_TWEAK_VERSION 0)
 
 if(WIN32)
