@@ -2,10 +2,11 @@ name: binder
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
+  - python=3.13
   - clangdev
   - python-clang
-  - libcxx
-  - occt=7.8.1
+  - libcxx-devel
+  - occt=7.9.0
   - tbb-devel
   - rapidjson
+  - pybind11

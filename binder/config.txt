@@ -184,17 +184,32 @@
 -function* cbegin
 -function* cend
 
+# Exclude any functions that takes these arguments or return these values,
+# This converts to basic_xstream<char> which doesn't work
+-function *Standard_SStream*
+-function *Standard_IStream*
+-function *Standard_OStream*
+-function *Standard_PCharacter*
+-function *std::istream*
+-function *std::ostream*
+-function *OperationsFlags*
+-rtype *Standard_OStream*
+-rtype *Standard_IStream*
+-rtype *Standard_SStream*
+-rtype *std::istream*
+-rtype *std::ostream*
+
 -function AIS_Line::Points
 
 -function AppDef_MultiLine::SetParameter
+-function* AppDef_*::Error
+# Linker errors
 -function AppDef_ResConstraintOfMyGradientbisOfBSplineCompute::Error
 -function AppDef_ResConstraintOfMyGradientOfCompute::Error
 -function AppDef_ResConstraintOfTheGradient::Error
 -function AppDef_TheResol::Error
 
 -function AdvApp2Var_Iso::AdvApp2Var_Iso(const GeomAbs_IsoType, const Standard_Integer, const Standard_Integer)
-
--function BinTools_Curve2dSet::Dump
 
 -function BlendFunc::Knots_
 -function BlendFunc::Mults_
@@ -204,6 +219,10 @@
 -function BOPDS_SubIterator::SetDS
 -function BOPDS_Iterator::SetDS
 -function BRepAlgo_DSAccess::IsDeleted
+
+-function BinTools_IStream::Stream
+-function BinObjMgt_Persistent::GetIStream
+-function BinObjMgt_Persistent::GetOStream
 
 -function BRepMeshData_Curve::BRepMeshData_Curve
 -function BRepMeshData_Edge::BRepMeshData_Edge
@@ -417,6 +436,13 @@
 -function Interval::IntersectionWithBounded
 -function Interval::Length
 
+-function IGESControl_Writer::SetShapeProcessFlags
+-function IGESControl_Writer::GetShapeProcessFlags
+-function IGESToBRep_Reader::SetShapeProcessFlags
+-function IGESToBRep_Reader::GetShapeProcessFlags
+-function IFSelect_WorkLibrary::ReadStream
+-function IFSelect_WorkSession::ReadStream
+
 -function PeriodicInterval::FirstIntersection
 -function PeriodicInterval::SecondIntersection
 
@@ -449,13 +475,11 @@
 -function IntPatch_RLine::SetParamOnS1
 -function IntPatch_RLine::SetParamOnS2
 
--function IntPolyh_Array<Type>::Dump
 -function IntPolyh_Array<Type>::IntPolyh_Array<Type>
 -function IntPolyh_MaillageAffinage::GetFinTE
 -function IntPolyh_MaillageAffinage::GetFinTT
-
+-function IntPolyh_Array<Type>::Dump
 -function IntTools_PntOnFace::IsValid
-
 
 -function IVtkTools_SubPolyDataFilter::vtkTypeMacro
 -function IVtkTools_DisplayModeFilter::vtkTypeMacro
@@ -553,12 +577,10 @@
 -function Poly_CoherentTriPtr::Poly_CoherentTriPtr
 
 -function ProjLib_ProjectOnSurface::Load(const opencascade::handle<Adaptor3d_HSurface> &)
+#-function Message_PrinterOStream::GetStream
+#-function Message_AttributeStream::Stream
 
--function Resource_Unicode::ConvertUnicodeToSJIS_
--function Resource_Unicode::ConvertUnicodeToEUC_
--function Resource_Unicode::ConvertUnicodeToGB_
--function Resource_Unicode::ConvertUnicodeToANSI_
--function Resource_Unicode::ConvertUnicodeToFormat_
+-function* Resource_Unicode::ConvertUnicodeTo*
 
 -function SelectMgr_SelectionImageFiller::CreateFiller_
 -function SelectMgr_TriangularFrustumSet::SelectMgr_TriangularFrustumSet
@@ -660,6 +682,8 @@
 -function XSControl_Vars::GetPoint2d
 -function XSControl_Vars::GetShape
 
+-function XSAlgo_ShapeProcessor::ReadProcessingData_
+
 # Unresolved symbol
 -function Xw_Window::DisplayConnection
 
@@ -738,6 +762,18 @@
 +header CPnts: Adaptor2d_Curve2d.hxx
 +header Contap: BRepGProp_Face.hxx
 +header Contap: BRepGProp_Domain.hxx
++header DEBRepCascade: DE_ConfigurationContext.hxx
++header DEBRepCascade: NCollection_Buffer.hxx
++header DEBRepCascade: TDocStd_Document.hxx
++header DEBRepCascade: XSControl_WorkSession.hxx
++header DEBRepCascade: TopoDS_Shape.hxx
+
++header DEXCAFCascade: DE_ConfigurationContext.hxx
++header DEXCAFCascade: NCollection_Buffer.hxx
++header DEXCAFCascade: XSControl_WorkSession.hxx
++header DEXCAFCascade: TDocStd_Document.hxx
++header DEXCAFCascade: TopoDS_Shape.hxx
+
 +header Font: bind_Font_BRepFont.hxx
 
 +header Graphic3d: bind_BVH_Set.hxx
@@ -748,6 +784,7 @@
 +header HLRAlgo: gp_XYZ.hxx
 +header HLRTopoBRep: Adaptor2d_Curve2d.hxx
 
++header IGESCAFControl: DE_ConfigurationContext.hxx
 +header IMeshTools: IMeshData_Face.hxx
 
 +header IntPatch: Intf_Polygon2d.hxx
@@ -783,6 +820,17 @@
 +header PrsMgr: PrsMgr_Presentation.hxx
 +header RWGltf: bind_NCollection_Shared.hxx
 +header RWGltf: bind_NCollection_IndexedMap.hxx
++header RWGltf: XSControl_WorkSession.hxx
++header RWGltf: DE_ConfigurationContext.hxx
++header RWObj: XSControl_WorkSession.hxx
++header RWObj: DE_ConfigurationContext.hxx
++header RWPly: XSControl_WorkSession.hxx
++header RWPly: DE_ConfigurationContext.hxx
++header RWStl: XSControl_WorkSession.hxx
++header RWStl: DE_ConfigurationContext.hxx
++header RWStl: NCollection_Buffer.hxx
++header RWStl: TDocStd_Document.hxx
++header RWStl: TopoDS_Shape.hxx
 
 +header SelectMgr: bind_SelectMgr_Frustum.hxx
 
@@ -794,6 +842,9 @@
 -header Standard: NCollection_SparseArrayBase.hxx
 -header Standard: Storage_Schema.hxx
 +header Standard: bind_NCollection_Shared.hxx
+
++header STEPCAFControl: DE_ConfigurationContext.hxx
++header STEPCAFControl: NCollection_Buffer.hxx
 
 +header StdLPersistent: bind_StdObjMgt_Attribute.hxx
 
@@ -820,6 +871,13 @@
 
 +header V3d: V3d_Viewer.hxx
 +header V3d: V3d_View.hxx
+
++header Vrml: DE_ConfigurationContext.hxx
++header Vrml: NCollection_Buffer.hxx
++header Vrml: TDocStd_Document.hxx
++header Vrml: XSControl_WorkSession.hxx
++header Vrml: TopoDS_Shape.hxx
+
 
 +header IVtkTools: vtkActor.h
 +header IVtkTools: vtkRenderer.h
@@ -1119,7 +1177,13 @@
 +patch bind_BVH_BaseBox: BVH_BaseBox<T, N>-->BVH_BaseBox<T, N, TheDerivedBox>
 +patch bind_BVH_Distance: cls_BVH_Distance.def(py::init<>());-->// cls_BVH_Distance.def(py::init<>());
 +patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
+
 +patch bind_SelectMgr_Frustum: cls_SelectMgr_Frustum.def(py::init<>());-->//cls_SelectMgr_Frustum.def(py::init<>());
++patch SelectMgr: py::class_<SelectMgr_TriangularFrustum, SelectMgr_Frustum<3>>-->py::class_<SelectMgr_TriangularFrustum, opencascade::handle<SelectMgr_TriangularFrustum>, SelectMgr_Frustum<3>>
++patch SelectMgr: py::class_<SelectMgr_RectangularFrustum, SelectMgr_Frustum<4>>-->py::class_<SelectMgr_RectangularFrustum, opencascade::handle<SelectMgr_RectangularFrustum>, SelectMgr_Frustum<4>>
++patch SelectMgr: py::class_<SelectMgr_SensitiveEntitySet, BVH_PrimitiveSet3d>-->py::class_<SelectMgr_SensitiveEntitySet, opencascade::handle<SelectMgr_SensitiveEntitySet>, BVH_PrimitiveSet3d>
+
++patch BRepExtrema: py::class_<BRepExtrema_TriangleSet, BVH_PrimitiveSet3d>-->py::class_<BRepExtrema_TriangleSet, opencascade::handle<BRepExtrema_TriangleSet>, BVH_PrimitiveSet3d>
 
 +patch Geom: (const TColStd_Array2OfReal * (Geom_BSplineSurface::*)() const) &Geom_BSplineSurface::Weights-->[](Geom_BSplineSurface& self) -> py::object {return self.Weights() ? py::cast(*self.Weights()) : py::none(); }
 +patch Graphic3d: bind_std-->// patched out // bind_std
@@ -1132,6 +1196,7 @@
 +patch Font: (TopoDS_Shape (Font_BRepTextBuilder::*)(Font_BRepFont &, const Font_TextFormatter &, const gp_Ax3 &)) &Font_BRepTextBuilder::Perform-->[](Font_BRepTextBuilder &self, Font_BRepFont_ & a0, const Font_TextFormatter & a1, const gp_Ax3 & a2) -> TopoDS_Shape { return self.Perform(a0, a1, a2); }
 +patch Font: (TopoDS_Shape (Font_BRepTextBuilder::*)(Font_BRepFont &, const NCollection_String &, const gp_Ax3 &, const Graphic3d_HorizontalTextAlignment, const Graphic3d_VerticalTextAlignment)) &Font_BRepTextBuilder::Perform-->[](Font_BRepTextBuilder &self, Font_BRepFont_ & a0, const NCollection_String & a1, const gp_Ax3 & a2, const Graphic3d_HorizontalTextAlignment a3, const Graphic3d_VerticalTextAlignment a4) -> TopoDS_Shape { return self.Perform(a0, a1, a2, a3, a4); }
 +patch Font: Font_BRepFont &-->Font_BRepFont_ &
+
 
 # Voxel
 +patch Voxel: py::class_<> cls_iXYZ-->py::class_<iXYZ> cls_iXYZ
