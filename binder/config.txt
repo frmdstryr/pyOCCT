@@ -39,6 +39,8 @@
 -class BRepMesh_NURBSRangeSplitter
 -class BRepMesh_BoundaryParamsRangeSplitter
 
+-class BVH::RadixSorter
+
 -class Cocoa_LocalPool
 
 -class FT_Vector
@@ -299,6 +301,7 @@
 -function BVH_PrimitiveSet<T, N>::BVH_PrimitiveSet<T, N>
 -function BVH_Set<T, N>::BVH_Set<T, N>
 -function BVH_Traverse<NumType, Dimension, BVHSetType, MetricType>::BVH_Traverse<NumType, Dimension, BVHSetType, MetricType>
+-class BVH::RadixSorter
 
 -function CDF_DirectoryIterator::CDF_DirectoryIterator
 
@@ -582,6 +585,9 @@
 
 -function* Resource_Unicode::ConvertUnicodeTo*
 
+-function RWObj_Tools::ReadVec3
+-function RWObj_Tools::ReadName
+
 -function SelectMgr_SelectionImageFiller::CreateFiller_
 -function SelectMgr_TriangularFrustumSet::SelectMgr_TriangularFrustumSet
 
@@ -786,6 +792,7 @@
 
 +header IGESCAFControl: DE_ConfigurationContext.hxx
 +header IMeshTools: IMeshData_Face.hxx
++header IMeshData: bind_NCollection_Shared.hxx
 
 +header IntPatch: Intf_Polygon2d.hxx
 
@@ -910,6 +917,16 @@
 +pname NCollection_DefaultHasher<unsigned int>--> NCollection_Hasher_unsigned_int
 +pname NCollection_DefaultHasher<unsigned long>--> NCollection_Hasher_unsigned_long
 +pname NCollection_DefaultHasher<unsigned long long>--> NCollection_Hasher_unsigned_long_long
+
++pname Graphic3d_TransformUtils::MatrixType<Standard_Real>--> Graphic3d_TransformUtils_MatrixType_Real
++pname Graphic3d_TransformUtils::MatrixType<Standard_ShortReal>--> Graphic3d_TransformUtils_MatrixType_ShortReal
++pname Graphic3d_TransformUtils::VectorType<Standard_Real>--> Graphic3d_TransformUtils_VectorType_Real
++pname Graphic3d_TransformUtils::VectorType<Standard_ShortReal>--> Graphic3d_TransformUtils_VectorType_ShortReal
+
++pname OpenGl::VectorType<Standard_Real>-->OpenGl_VectorType_Real
++pname OpenGl::VectorType<Standard_ShortReal>-->OpenGl_VectorType_ShortReal
++pname OpenGl::MatrixType<Standard_Real>-->OpenGl_MatrixType_Real
++pname OpenGl::MatrixType<Standard_ShortReal>-->OpenGl_MatrixType_ShortReal
 
 # nodelete option -------------------------------------------------------------
 +nodelete TDF_LabelNode
@@ -1177,7 +1194,7 @@
 +patch bind_BVH_BaseBox: BVH_BaseBox<T, N>-->BVH_BaseBox<T, N, TheDerivedBox>
 +patch bind_BVH_Distance: cls_BVH_Distance.def(py::init<>());-->// cls_BVH_Distance.def(py::init<>());
 +patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
-
++patch bind_handle: cls_opencascade_handle.def(py::init<const typename opencascade::handle&>(), py::arg("theHandle"));-->cls_opencascade_handle.def(py::init<const typename opencascade::handle<T>&>(), py::arg("theHandle"));
 +patch bind_SelectMgr_Frustum: cls_SelectMgr_Frustum.def(py::init<>());-->//cls_SelectMgr_Frustum.def(py::init<>());
 +patch SelectMgr: py::class_<SelectMgr_TriangularFrustum, SelectMgr_Frustum<3>>-->py::class_<SelectMgr_TriangularFrustum, opencascade::handle<SelectMgr_TriangularFrustum>, SelectMgr_Frustum<3>>
 +patch SelectMgr: py::class_<SelectMgr_RectangularFrustum, SelectMgr_Frustum<4>>-->py::class_<SelectMgr_RectangularFrustum, opencascade::handle<SelectMgr_RectangularFrustum>, SelectMgr_Frustum<4>>
