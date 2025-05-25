@@ -85,7 +85,16 @@ LIST(APPEND OCCT_MODULES
     CPnts
     CSLib
     DE
+    DEBREP
     DEBRepCascade
+    DEGLTF
+    DEIGES
+    DEOBJ
+    DEPLY
+    DESTEP
+    DESTL
+    DEVRML
+    DEXCAF
     DEXCAFCascade
     Draft
     DsgPrs
@@ -191,7 +200,6 @@ LIST(APPEND OCCT_MODULES
     LDOMBasicString
     LDOMParser
     LDOMString
-    LibCtl
     LocalAnalysis
     LocOpe
     LProp
@@ -224,18 +232,6 @@ LIST(APPEND OCCT_MODULES
     RWMesh
     RWObj
     RWPly
-    RWStepAP203
-    RWStepAP214
-    RWStepAP242
-    RWStepBasic
-    RWStepDimTol
-    RWStepElement
-    RWStepFEA
-    RWStepGeom
-    RWStepKinematics
-    RWStepRepr
-    RWStepShape
-    RWStepVisual
     RWStl
     Select3D
     SelectBasics
