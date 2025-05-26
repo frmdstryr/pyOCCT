@@ -2,13 +2,13 @@ context: {}
 package:
 
   name: pyocct
-  version: 7.9.0.0
+  version: 7.9.0
 
 source:
   path: ../
 
 build:
-  number: 100
+  number: 104
 
 requirements:
   build:

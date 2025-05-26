@@ -81,6 +81,9 @@
 -class ShapePersistent_Poly
 -class ShapePersistent_TopoDS
 
+# Deprecated
+-class StepData_ConfParameters
+
 -class StdStorage_Bucket
 -class StdStorage_BucketIterator
 -class StdStorage_BucketOfPersistent
@@ -987,6 +990,9 @@
 -import Aspect: WNT
 -import AIS: WNT
 -import BiTgte: BRepFill
+-import DESTEP: STEPControl
+-import DEGLTF: RWGltf
+-import DEGLTF: RWMesh
 -import Geom: GeomEvaluator
 -import Geom2d: Geom2dEvaluator
 -import GeomAdaptor: GeomEvaluator
@@ -1002,6 +1008,7 @@
 -import StdObject: ShapePersistent
 -import StdPersistent: ShapePersistent
 -import StepData: STEPControl
+-import Transfer: XSAlgo
 -import XCAFDimTolObjects: XCAFDoc
 
 # Import guards ---------------------------------------------------------------
@@ -1012,6 +1019,7 @@
 +iguard Font: StdPrs
 +iguard Graphic3d: Select3D
 +iguard Geom2dAdaptor: GeomLib
++iguard IMeshData: BRepMesh
 +iguard LDOMBasicString: LDOM
 +iguard LDOMString: LDOM
 +iguard LDOMParser: LDOM
@@ -1023,8 +1031,10 @@
 +iguard Standard: TCollection
 +iguard Standard: NCollection
 +iguard StepRepr: StepShape
++iguard StepBasic: StepRepr
 +iguard Prs3d: StdPrs
 +iguard TPrsStd: AIS
++iguard DE: XSControl
 
 # Call guards -----------------------------------------------------------------
 +cguard Font_TextFormatter::SetupAlignment-->Graphic3d
@@ -1117,7 +1127,6 @@
 # Some bind_NCollection_Array2 dont have a bind_NCollection_Array1 bind call
 +before_type Extrema_Array2OfPOnSurfParams-->bind_NCollection_Array1<Extrema_POnSurfParams>(mod, "Extrema_Array1OfPOnSurfParams", py::module_local(false));
 +before_type FEmTool_AssemblyTable-->bind_NCollection_Array1<opencascade::handle<TColStd_HArray1OfInteger>>(mod, "FEmTool_Array1AssemblyTable", py::module_local(false));
-+before_type IGESBasic_Array2OfHArray1OfReal-->bind_NCollection_Array1<opencascade::handle<TColStd_HArray1OfReal>>(mod, "IGESBasic_Array1OfHArray1OfReal", py::module_local(false));
 +before_type MAT2d_Array2OfConnexion-->bind_NCollection_Array1<opencascade::handle<MAT2d_Connexion>>(mod, "MAT2d_Array1OfConnexion", py::module_local(false));
 +before_type StepElement_Array2OfCurveElementPurposeMember-->bind_NCollection_Array1<opencascade::handle<StepElement_CurveElementPurposeMember>>(mod, "StepElement_Array1OfCurveElementPurposeMember", py::module_local(false));
 +before_type StepElement_Array2OfSurfaceElementPurpose-->bind_NCollection_Array1<StepElement_SurfaceElementPurpose>(mod, "StepElement_Array1OfSurfaceElementPurpose", py::module_local(false));
@@ -1145,6 +1154,15 @@
 +before_type StdPersistent_DataXtd_PatternStd-->bind_StdObjMgt_Attribute<TDataXtd_PatternStd>(mod, "StdObjMgt_Attribute_TDataXtd_PatternStd", py::module_local());
 
 +before_type StdObjMgt_MapOfInstantiators-->bind_NCollection_DataMap<TCollection_AsciiString, opencascade::handle<StdObjMgt_Persistent>>(mod, "StdObjMgt_DataMapOfInstantiators", py::module_local(false));
+
++before_type RWGltf_ConfigurationNode-->/* --- RWGltf_ConfigurationNode deprecated
++after_type RWGltf_ConfigurationNode-->--- end RWGltf_ConfigurationNode deprecated */
+
++before_type StepData_ConfParameters-->/* --- StepData_ConfParameters deprecated
++before_type StepData_DefaultGeneral--> --- end StepData_ConfParameters deprecated */
+
++before_type Vrml_ConfigurationNode-->/* --- Vrml_ConfigurationNode deprecated
++before_type Vrml_Coordinate3-->--- end Vrml_ConfigurationNode deprecated */
 
 # Extra text ------------------------------------------------------------------
 +after_type AIS_Line-->cls_AIS_Line.def("Points", [](AIS_Line &self, opencascade::handle<Geom_Point> & thePStart, opencascade::handle<Geom_Point> & thePEnd) {self.Points(thePStart, thePEnd); return std::tuple<opencascade::handle<Geom_Point>, opencascade::handle<Geom_Point>>(thePStart, thePEnd); }, "Returns the starting point thePStart and the end point thePEnd of the line set by SetPoints.", py::arg("thePStart"), py::arg("thePEnd"));
@@ -1196,9 +1214,6 @@
 +patch bind_BVH_Traverse: (const int &)-->(const opencascade::handle<BVH_Tree <NumType, Dimension>>&)
 +patch bind_handle: cls_opencascade_handle.def(py::init<const typename opencascade::handle&>(), py::arg("theHandle"));-->cls_opencascade_handle.def(py::init<const typename opencascade::handle<T>&>(), py::arg("theHandle"));
 +patch bind_SelectMgr_Frustum: cls_SelectMgr_Frustum.def(py::init<>());-->//cls_SelectMgr_Frustum.def(py::init<>());
-+patch SelectMgr: py::class_<SelectMgr_TriangularFrustum, SelectMgr_Frustum<3>>-->py::class_<SelectMgr_TriangularFrustum, opencascade::handle<SelectMgr_TriangularFrustum>, SelectMgr_Frustum<3>>
-+patch SelectMgr: py::class_<SelectMgr_RectangularFrustum, SelectMgr_Frustum<4>>-->py::class_<SelectMgr_RectangularFrustum, opencascade::handle<SelectMgr_RectangularFrustum>, SelectMgr_Frustum<4>>
-+patch SelectMgr: py::class_<SelectMgr_SensitiveEntitySet, BVH_PrimitiveSet3d>-->py::class_<SelectMgr_SensitiveEntitySet, opencascade::handle<SelectMgr_SensitiveEntitySet>, BVH_PrimitiveSet3d>
 
 +patch BRepExtrema: py::class_<BRepExtrema_TriangleSet, BVH_PrimitiveSet3d>-->py::class_<BRepExtrema_TriangleSet, opencascade::handle<BRepExtrema_TriangleSet>, BVH_PrimitiveSet3d>
 

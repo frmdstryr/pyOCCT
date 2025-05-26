@@ -191,7 +191,7 @@ foreach(MOD ${OCCT_MODULES})
     endif()
 
     # Add pybind11 module
-    pybind11_add_module(${MOD} ${SRCS})
+    pybind11_add_module(${MOD} ${SRCS} THIN_LTO OPT_SIZE)
     target_link_libraries(${MOD} PUBLIC ${OpenCASCADE_LIBRARIES}
                                         ${Python_LIBRARIES})
 
